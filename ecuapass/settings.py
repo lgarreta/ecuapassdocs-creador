@@ -43,7 +43,8 @@ DEBUG = True
 #ALLOWED_HOSTS = ['web-production-d3df.up.railway.app', '127.0.0.1']
 ALLOWED_HOSTS = ['ecuapassdocs-production.up.railway.app', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-d3df.up.railway.app']
+#CSRF_TRUSTED_ORIGINS = ['https://web-production-d3df.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://ecuapassdocs-production.up.railway.app']
 
 # Application definition
 
