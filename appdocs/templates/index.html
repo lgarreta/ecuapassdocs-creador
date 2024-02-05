@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Suite Ecuapass Docs</h1>
+<p>
+Esta visitando el sitio de <em>Ecuapass Docs</em>, una solución informática de Manejo Inteligente de documentos en el Sistema de Aduanas del Ecuador “ECUAPASS”, diseñada para agilizar y optimizar la gestión de los documentos necesarios para el transporte terreste internacional: cartas de porte (CPIC), manifiestos de carga (MCI), y declaraciones de tránsito (DTAI).
+</p>
+</p>
+En este sitio podrá elaborar en línea cualquiera de los tres documentos anteriores y almacenar de forma automática en una base de datos, la información principal contenida en estos (cartas de porte, manifiestos, declaraciones, empresas, vehículos, conductores, entre otros)
+</p>
+
+<h2>UML Models</h2>
+<p>An UML diagram of the site's Django model structure is shown below. </p>
+
+<div>
+  {% load static %}
+  <img src="{% static 'appdocs/images/doc.jpg' %}" alt="My image" width="600px">
+</div>
+
+<h2>Dynamic content</h2>
+
+<p>The library has the following record counts:</p>
+<ul>
+  <li><strong>Empresas:</strong> {{ num_empresas }}</li>
+  <li><strong>Condutores:</strong> {{ num_conductors }}</li>
+  <li><strong>Vehiculos:</strong> {{ num_vehiculos }}</li>
+  <li><strong>Cartaportes:</strong> {{ num_cartaportes }}</li>
+  <li><strong>Manifiestos:</strong> {{ num_manifiestos }}</li>
+</ul>
+
+<p>Has visitado esta página {{ num_visits }}{% if num_visits == 1 %} vez{% else %} veces{% endif %}.</p>
+
+{% endblock %}

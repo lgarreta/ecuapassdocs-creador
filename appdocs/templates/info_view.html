@@ -1,0 +1,96 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con Campos de Texto</title>
+    <style>
+        body {
+            background-image: url('images/doc.jpg');
+            background-size: 1699px 2200px;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            position: absolute;
+            left: 0px;
+            top: 100px;
+            width: 800px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-input {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        {% load static %}
+    </div>
+
+    <h1>Información</h1>
+    <p>Aquí puedes agregar cualquier información que desees mostrar.</p>
+
+    <div class="modal-body">
+        {% load static %}
+        <img src="{% static 'images/doc.jpg' %}" alt="My image" class="img-fluid">
+
+        <input type="text" id="campo1" class="custom-input" placeholder="Campo de texto 1">
+        <input type="text" id="campo2" class="custom-input" placeholder="Campo de texto 2">
+        <input type="text" id="campo3" class="custom-input" placeholder="Campo de texto 3">
+        <input type="text" id="campo4" class="custom-input" placeholder="Campo de texto 4">
+
+        <!-- Botón para descargar el PDF -->
+        <button onclick="generarPDF()">Descargar PDF</button>
+    </div>
+
+    <script src="https://unpkg.com/html2pdf.js@0.10.0/dist/html2pdf.bundle.js"></script>
+
+    <script>
+        function generarPDF() {
+            // Obtener el contenedor que quieres convertir a PDF
+            var element = document.querySelector('.modal-body');
+
+            // Opciones para la generación del PDF
+            var options = {
+                margin: 0,
+                filename: 'documento.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Usar html2pdf para generar y descargar el PDF
+            var pdf = html2pdf(element, options);
+
+            // Modificar las coordenadas de los campos de texto en el PDF
+            pdf.then(function() {
+                var pdfInstance = pdf.get('pdf');
+                pdfInstance.autoTable({
+                    startY: 50, // Ajusta según sea necesario
+                    margin: { top: 10 },
+                    body: [
+                        ['Campo de texto 1:', document.getElementById('campo1').value],
+                        ['Campo de texto 2:', document.getElementById('campo2').value],
+                        ['Campo de texto 3:', document.getElementById('campo3').value],
+                        ['Campo de texto 4:', document.getElementById('campo4').value],
+                    ]
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+{% endblock %}
+
