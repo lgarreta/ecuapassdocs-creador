@@ -40,7 +40,9 @@ CSRF_TRUSTED_ORIGINS = ["https://*.railway.app","https://127.0.0.1", "https://19
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['web-production-d3df.up.railway.app', '127.0.0.1']
+#ALLOWED_HOSTS = ['web-production-d3df.up.railway.app', '127.0.0.1']
+ALLOWED_HOSTS = ['ecuapassdocs-production.up.railway.app', '127.0.0.1']
+
 CSRF_TRUSTED_ORIGINS = ['https://web-production-d3df.up.railway.app']
 
 # Application definition
