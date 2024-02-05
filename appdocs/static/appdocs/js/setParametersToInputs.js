@@ -1,4 +1,4 @@
-function setParametersToInputs (textAreas, inputParameters, handleInput) {
+function setParametersToInputs (textAreas, inputParameters) {
 	// Set restrictions and styles for each input textarea
 	textAreas.forEach (function (textArea) {
 		const input = inputsParameters [textArea.id];

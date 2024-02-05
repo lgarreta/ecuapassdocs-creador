@@ -71,18 +71,21 @@ conductores_data = [
 ]
 
 def populate_database (data, table):
-    for entry in data:
-        query = sql.SQL(f"INSERT INTO {table} VALUES {entry}")
-            #sql.SQL(', ').join(map(sql.Identifier, entry.keys())),
-            #sql.SQL(', ').join(map(sql.Placeholder, entry.values()))
-        #)
-        print (">>> query:", query)
-        execute_sql_query(query)
+	try:
+		for entry in data:
+			query = sql.SQL(f"INSERT INTO {table} VALUES {entry}")
+				#sql.SQL(', ').join(map(sql.Identifier, entry.keys())),
+				#sql.SQL(', ').join(map(sql.Placeholder, entry.values()))
+			#)
+			print (">>> query:", query)
+			execute_sql_query(query)
+	except:
+		print (">>> Registro existente:", table, data)
 
 
 
 if __name__ == '__main__':
-    #populate_database (vehiculos_data, "appdocs_vehiculo")
+    populate_database (vehiculos_data, "appdocs_vehiculo")
     populate_database (empresas_data, "appdocs_empresa")
     populate_database (conductores_data, "appdocs_conductor")
 

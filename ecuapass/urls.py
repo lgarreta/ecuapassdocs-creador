@@ -24,9 +24,13 @@ from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('appdocs/', include('appdocs.urls')),
     path('', RedirectView.as_view(url='/appdocs/', permanent=True)),
     path('accounts/', include('django.contrib.auth.urls')),
+	path('accounts/login/', auth_views.LogoutView.as_view(), name='logout'),
+	path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
