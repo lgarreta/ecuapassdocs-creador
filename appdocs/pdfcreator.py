@@ -85,7 +85,7 @@ class CreadorPDF:
 			elif params ["font"] == "large":
 				FONTSIZE = 16
 			elif params ["font"] == "small":
-				FONTSIZE = 8
+				FONTSIZE = 7
 			can.setFont ("Helvetica-Bold", FONTSIZE)
 
 			text         = inputValues [key]

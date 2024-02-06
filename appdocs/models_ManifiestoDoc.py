@@ -85,7 +85,7 @@ class ManifiestoDoc (models.Model):
 	txt26 = models.CharField (max_length=200, null=True)
 	txt27 = models.CharField (max_length=200, null=True)
 	txt28 = models.CharField (max_length=200, null=True)
-	txt29 = models.CharField (max_length=200, null=True)
+	txt29 = models.CharField (max_length=800, null=True)
 	txt30 = models.CharField (max_length=200, null=True)
 	txt31 = models.CharField (max_length=200, null=True)
 	txt32_1 = models.CharField (max_length=200, null=True)
