@@ -1,5 +1,0 @@
-PGDATABASE="railway"
-PGUSER="postgres"
-PGPASSWORD="Fbd**DdC1d-aC*e4f2cg*CDA4E43b4fC"
-PGHOST="monorail.proxy.rlwy.net"
-PGPORT="54626"
