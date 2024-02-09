@@ -36,6 +36,8 @@
                 {% if user.is_staff %}
                 <ul class="sidebar-nav">
                     <b>Elaboración:</b>
+                    <li><a href="{% url 'cartaporte' %}" target="_blank">Crear Cartaporte Importación</a></li>
+                    <li><a href="{% url 'cartaporte' %}" target="_blank">Crear Cartaporte Exportación</a></li>
                     <li><a href="{% url 'cartaporte' %}" target="_blank">Nueva Cartaporte</a></li>
                     <li><a href="{% url 'manifiesto' %}" target="_blank">Nuevo Manifiesto</a></li>
                 </ul>
