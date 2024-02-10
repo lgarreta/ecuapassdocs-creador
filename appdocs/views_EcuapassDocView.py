@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 
 # For login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import resolve   # To get calling URLs
 
 # Own imports
 from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
@@ -47,12 +48,17 @@ class EcuapassDocView(LoginRequiredMixin, View):
 		if pk:
 			inputParameters = self.setValuesToInputs (pk, inputParameters)
 			
+		# Set "codigo pais" ("CO", "EC") from URL pattern ("exportacion" or "importacion")
+		# Values is set into "txt-1" key of inputParameters (Valid for NTA and BYZA)
+		inputParameters = self.getCodigoPaisFromURL (request, inputParameters)
+
 		# Send input fields parameters (bounds, maxLines, maxChars, ...)
 		contextDic = {"input_parameters" : inputParameters}
 		return render (request, self.templateName, contextDic)
 
 	#-------------------------------------------------------------------
 	# Used to receive a filled manifiesto form and create a response
+	# Get doc number and create a PDF from document values.
 	#-------------------------------------------------------------------
 	@method_decorator(csrf_protect)
 	def post (self, request, *args, **kargs):
@@ -60,7 +66,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 		button_type = request.POST.get('boton_pdf', '').lower()
 
 		inputValues = self.getInputValuesFromForm (request)       # Values without CPI number
-		fieldValues = self.getFieldValuesFromBounds (inputValues)
+		fieldValues = self.getFieldValuesFromInputs (inputValues)
 		docNumber   = inputValues ["txt00"]
 
 		pdfFilename, pdfContent  = self.createPDF  (inputValues, button_type)
@@ -74,7 +80,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			return pdf_response
 		elif "original" in button_type:
 			if docNumber == "" or docNumber == "CLON" or docNumber == "PRELIMINAR": 
-				docNumber     = self.saveDocumentToDB (inputValues, fieldValues, "GET-ID")
+				docNumber = self.saveDocumentToDB (inputValues, fieldValues, "GET-ID")
 				return JsonResponse ({'numero': docNumber}, safe=False)
 			else: 
 				self.saveDocumentToDB (inputValues, fieldValues, "SAVE-DATA")
@@ -83,14 +89,31 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			if inputValues ["txt00"] != "": 	
 				return pdf_response
 			else: 
-				response_data      = {'message': "Error: No se ha creado documento original!" }
+				response_data = {'message': "Error: No se ha creado documento original!" }
 				return JsonResponse(response_data, safe=False)
 		elif "clonar" in button_type:
 			response_data      = {'numero': "CLON"}
 			return JsonResponse (response_data, safe=False)
 		else:
 			print (">>> Error: No se conoce opción del botón presionado:", button_type)
-				
+
+	#-------------------------------------------------------------------
+	#-- Set codigo pais: CO : importacion or EC : exportacion 
+	#-------------------------------------------------------------------
+	def getCodigoPaisFromURL (self, request, inputParameters):
+		urlName = resolve(request.path_info).url_name
+		
+		if "importacion" in urlName:
+			inputParameters ["txt-1"]["value"] = "CO" 
+		elif "exportacion" in urlName:
+			inputParameters ["txt-1"]["value"] = "EC" 
+		else:
+			print (f"Alerta: No se pudo determinar código pais desde el URL: '{urlName}'")
+			inputParameters ["txt-1"]["value"] = "" 
+
+		return inputParameters
+
+			
 	#-------------------------------------------------------------------
 	#-- Return a dic with the texts from the document form (e.g. txt00,)
 	#-------------------------------------------------------------------
@@ -108,7 +131,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	#-- Embed fields info (key:value) into PDF doc
 	#-- Info is embedded according to Azure format
 	#----------------------------------------------------------------
-	def getFieldValuesFromBounds (self, inputValues):
+	def getFieldValuesFromInputs (self, inputValues):
 		jsonFieldsDic = {}
 		# Load parameters from package
 		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
@@ -171,7 +194,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			# Save Cartaporte document
 			ecuapassDoc = docClass ()
 			ecuapassDoc.save ()
-			ecuapassDoc.numero = self.createDocumentNumber (ecuapassDoc.id)
+			ecuapassDoc.numero = self.createDocumentNumber (inputValues, ecuapassDoc.id)
 			ecuapassDoc.save ()
 
 			# Save Cartaporte register
@@ -200,14 +223,9 @@ class EcuapassDocView(LoginRequiredMixin, View):
 
 	#-------------------------------------------------------------------
 	#-- Create a formated document number ranging from 2000000 
+	#-- Uses "codigo pais" as prefix (for NTA, BYZA)
 	#-------------------------------------------------------------------
-	def createDocumentNumber (self, id):
-		if self.docType == "cartaporte":
-			numero = f"CPI{2000000 + id}"
-		elif self.docType == "manifiesto":
-			numero = f"MCI{2000000 + id}"
-		else:
-			print (f"Error: Tipo de documento '{docType}' no soportado")
-			sys.exit (0)
-
+	def createDocumentNumber (self, inputValues, id):
+		codigoPais = inputValues ["txt-1"]
+		numero = f"{codigoPais}{2000000 + id}"
 		return (numero)

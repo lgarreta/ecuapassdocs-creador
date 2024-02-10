@@ -1,5 +1,5 @@
 // Create textarea inputs for ECUAPASS document forms (e.g. "txt00", "txt01"
-// Textarea properties are given in the input parameters JSON file
+// Textarea properties are given in the input parameters file (JSON)
 
 function createInputTextareas (inputsParameters, inputsContainer) {
 	var textAreas = [];
@@ -14,7 +14,12 @@ function createInputTextareas (inputsParameters, inputsContainer) {
 		// Restrictions like "hidden" or "readonly"
 		if ("restrictions" in input) {
 			input ["restrictions"].forEach (restriction => {
-				textarea.setAttribute (restriction, restriction);
+				if (restriction.includes ("color")) {
+					let color = restriction.split ("=")[1]
+					textarea.style.color = color
+				}else {
+					textarea.setAttribute (restriction, restriction);
+				}
 			});
 		}
 

@@ -77,7 +77,6 @@ class CreadorPDF:
 			imgBounds = [params["x"]-7, params["y"]-7, params ["width"], params ["height"]]
 			pdfBounds = self.convertToImageToPdfBounds (imgBounds)
 
-			print (">>>", params ["font"])
 			if params ["font"] == "hidden":
 				FONTSIZE = 0
 			elif params ["font"] == "normal":
@@ -87,6 +86,13 @@ class CreadorPDF:
 			elif params ["font"] == "small":
 				FONTSIZE = 7
 			can.setFont ("Helvetica-Bold", FONTSIZE)
+
+			#-- Set color to text 
+			if "restrictions" in params.keys ():
+				if any ("color" in x for x in params ["restrictions"]):
+					can.setFillColorRGB (1,0,0)
+				else:
+					can.setFillColorRGB (0,0,0)
 
 			text         = inputValues [key]
 			textLines    = text.split ("\n")

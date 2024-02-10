@@ -36,10 +36,10 @@
                 {% if user.is_staff %}
                 <ul class="sidebar-nav">
                     <b>Elaboración:</b>
-                    <li><a href="{% url 'cartaporte' %}" target="_blank">Crear Cartaporte Importación</a></li>
-                    <li><a href="{% url 'cartaporte' %}" target="_blank">Crear Cartaporte Exportación</a></li>
-                    <li><a href="{% url 'cartaporte' %}" target="_blank">Nueva Cartaporte</a></li>
-                    <li><a href="{% url 'manifiesto' %}" target="_blank">Nuevo Manifiesto</a></li>
+                    <li><a href="{% url 'cartaporte' %}{{ 'importacion' }}" target="_blank">Cartaporte Importación</a></li>
+                    <li><a href="{% url 'cartaporte' %}{{ 'exportacion' }}" target="_blank">Cartaporte Exportación</a></li>
+                    <li><a href="{% url 'manifiesto' %}{{ 'importacion' }}" target="_blank">Manifiesto Importación</a></li>
+                    <li><a href="{% url 'manifiesto' %}{{ 'exportacion' }}" target="_blank">Manifiesto Exportación</a></li>
                 </ul>
                 <ul class="sidebar-nav">                 
                     <b>Consulta:</b>

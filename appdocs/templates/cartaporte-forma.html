@@ -13,6 +13,9 @@
 
 	<!-- Own JS Scripts -->
 	<script src="{% static 'appdocs/js/loadInputParameters.js' %}"></script>
+	<script src="{% static 'appdocs/js/createInputTextareas.js' %}"></script>
+
+	<script src="{% static 'appdocs/js/autocomplete-cartaporte.js' %}"></script>
 	<!--
 	<script src="{% static 'appdocs/js/autosave.js' %}"></script>
 	-->
@@ -166,37 +169,38 @@
 					<button type="submit" id="pdf_clonar_btn" name="action" value="clonar">Clonar</button>
 				</div>
 				<!--------------------------------------------------------------->
-				<!----------------------- Input fields -------------------------->
+				<!------------- Input fields added dynamically ------------------>
 				<!--------------------------------------------------------------->
+				<!--
 				<textarea name="txt00" id="txt00" class="input_numero" readonly>PRELIMINAR</textarea>
 				<textarea name="txt01" id="txt01" class="input_numero" hidden></textarea>
-				<!-- input_empresa: 02, 03, 04, 05: Nombre, dir, pais, rut -->
+				<!-- input_empresa: 02, 03, 04, 05: Nombre, dir, pais, rut 
 				<textarea name="txt02" id="txt02" class="input_empresa"></textarea>
 				<textarea name="txt03" id="txt03" class="input_empresa"></textarea>
 				<textarea name="txt04" id="txt04" class="input_empresa"></textarea>
 				<textarea name="txt05" id="txt05" class="input_empresa"></textarea>
-				<!-- input_lugar: 06, 07, 08: Ciudad, Pais, Fecha -->
+				<!-- input_lugar: 06, 07, 08: Ciudad, Pais, Fecha 
 				<textarea name="txt06" id="txt06" class="input_lugar"></textarea>
 				<textarea name="txt07" id="txt07" class="input_lugar"></textarea>
 				<textarea name="txt08" id="txt08" class="input_lugar"></textarea>
 
 				<textarea name="txt09" id="txt09" class="input_condiciones"></textarea>
 
-				<!-- input_bultos: 10, 11, 12: Cantidad, Marca, Descripcion -->
+				<!-- input_bultos: 10, 11, 12: Cantidad, Marca, Descripcion 
 				<textarea name="txt10" id="txt10" class="input_bultos"></textarea>
 				<textarea name="txt11" id="txt11" class="input_bultos"></textarea>
 				<textarea name="txt12" id="txt12" class="input_descripcion"></textarea>
 
-				<!-- input_valor: 13_1, 13_2, 14, 15: Peso, volumen, medidas -->
+				<!-- input_valor: 13_1, 13_2, 14, 15: Peso, volumen, medidas 
 				<textarea name="txt13_1" id="txt13_1" class="input_valor"></textarea>
 				<textarea name="txt13_2" id="txt13_2" class="input_valor"></textarea>
 				<textarea name="txt14" id="txt14" class="input_valor"></textarea>
 				<textarea name="txt15" id="txt15" class="input_valor"></textarea>
 
-				<!-- input_incoterm -->
+				<!-- input_incoterm 
 				<textarea name="txt16" id="txt16" class="input_incoterm"></textarea>
 
-				<!-- input_valor -->
+				<!-- input_valor 
 				<textarea name="txt17_11" id="txt17_11" class="input_valor"></textarea>
 				<textarea name="txt17_12" id="txt17_12" class="input_valor"></textarea>
 				<textarea name="txt17_13" id="txt17_13" class="input_valor"></textarea>
@@ -215,7 +219,7 @@
 				<textarea name="txt17_44" id="txt17_44" class="input_general"></textarea>
 
 				<!-- Documentos, Emision, Representante, Instrucciones, Observaciones,
-				Transportista -->
+				Transportista 
 				<textarea name="txt18" id="txt18" class="input_documento"></textarea>
 
 				<textarea name="txt19" id="txt19" class="input_lugar"></textarea>
@@ -224,7 +228,7 @@
 				<textarea name="txt22" id="txt22" class="input_general"></textarea>
 				<textarea name="txt23" id="txt23" class="input_general"></textarea>
 				
-				<!-- Tipo: Original o Copia -->
+				<!-- Tipo: Original o Copia 
 				<textarea name="txt24" id="txt24" class="input_tipo"></textarea>
 
 				<!-- Add other input fields as needed -->
@@ -238,6 +242,11 @@
 		//-------------------------------------------------------------
 		let inputsParameters = {{ input_parameters|safe }};
 
+		// Create input textareas for the html form
+		const inputsContainer = document.querySelector(".container");
+		const textAreas = createInputTextareas (inputsParameters, inputsContainer);
+		//const textAreas = document.querySelectorAll ("textarea");
+
 		window.jsPDF = window.jspdf.jsPDF;
 		let pdf = new jsPDF();
 
@@ -247,8 +256,8 @@
 		let textArea = "";
 		let text     = "";
 
+
 		// Set restrictions and styles for each input textarea
-		const textAreas = document.querySelectorAll ("textarea");
 		textAreas.forEach (function (textArea) {
 			const input = inputsParameters [textArea.id];
 			textArea.value = input ["value"]
@@ -363,61 +372,6 @@
 			});
 		});
 
-		// Create autocomplete for an entity
-		function createAutocomplete (entity) {
-			inputSelector = entity.inputSelector
-			sourceUrl     = entity.sourceUrl
-			
-			$(inputSelector).autocomplete({
-				source: function (request, response) {
-					$.ajax({ url: sourceUrl, dataType: 'json', data: { query: request.term},
-
-						beforeSend: function (xhr, settings) {
-							// Include the CSRF token in the request headers
-							xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-						},
-
-						success: function (data) {
-							responseData = entity.onAjaxSuccess (data)
-							response (responseData)
-						}
-					});
-				},
-				minLength: 2, 
-				select: function (event, ui) {
-					entity.onItemSelected (ui)
-					// Prevent the default behavior of filling the input with the selected value
-					return false;
-				}
-			});
-		}
-
-		// Autocomplete class for Empresa inputs
-		class AutoCompleteEmpresa {
-			constructor (inputSelector) {
-				let inputId = "#" + inputSelector
-				this.inputSelector = inputSelector;
-				this.sourceUrl     = "opciones-empresa/"
-				this.fullData = null;
-			}
-
-			// When ajax query is succesfull, set items
-			onAjaxSuccess (data) {
-				this.fullData = data;
-				let flatData = [];
-				for (let i=0; i < data.length; i++) {
-					flatData.push (data[i] ["itemLine"])
-				}
-				return flatData;
-			}
-
-			// When an item is selected, populate the textarea 
-			onItemSelected (ui) {
-				let index = ui.item.value.split (".")[0]
-				let text = this.fullData [index]["itemText"]
-				$(this.inputSelector).val (text);
-			}
-		}
 
 		// Return array of selected textAreas according to className
 		function getTextAreasByClassName (className) {
@@ -431,6 +385,63 @@
 			return (selectedTextAreas);
 		}
 
+
+//		// Create autocomplete for an entity
+//		function createAutocomplete (entity) {
+//			inputSelector = entity.inputSelector
+//			sourceUrl     = entity.sourceUrl
+//			
+//			$(inputSelector).autocomplete({
+//				source: function (request, response) {
+//					$.ajax({ url: sourceUrl, dataType: 'json', data: { query: request.term},
+//
+//						beforeSend: function (xhr, settings) {
+//							// Include the CSRF token in the request headers
+//							xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+//						},
+//
+//						success: function (data) {
+//							responseData = entity.onAjaxSuccess (data)
+//							response (responseData)
+//						}
+//					});
+//				},
+//				minLength: 2, 
+//				select: function (event, ui) {
+//					entity.onItemSelected (ui)
+//					// Prevent the default behavior of filling the input with the selected value
+//					return false;
+//				}
+//			});
+//		}
+//
+//		// Autocomplete class for Empresa inputs
+//		class AutoCompleteEmpresa {
+//			constructor (inputSelector) {
+//				let inputId = "#" + inputSelector
+//				this.inputSelector = inputSelector;
+//				this.sourceUrl     = "opciones-empresa/"
+//				this.fullData = null;
+//			}
+//
+//			// When ajax query is succesfull, set items
+//			onAjaxSuccess (data) {
+//				this.fullData = data;
+//				let flatData = [];
+//				for (let i=0; i < data.length; i++) {
+//					flatData.push (data[i] ["itemLine"])
+//				}
+//				return flatData;
+//			}
+//
+//			// When an item is selected, populate the textarea 
+//			onItemSelected (ui) {
+//				let index = ui.item.value.split (".")[0]
+//				let text = this.fullData [index]["itemText"]
+//				$(this.inputSelector).val (text);
+//			}
+//		}
+//
 
 </script>
 </body>

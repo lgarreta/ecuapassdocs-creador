@@ -14,7 +14,7 @@
 	<p><strong>Fecha de emisión:</strong> {{ manifiesto.fecha_emision }}</p>
 
 	<p><strong>Documento:</strong> 
-		<a href="{% url 'manifiesto' %}{{ manifiesto.id }}">{{ manifiesto.numero }}</a>
+		<a href="{% url 'manifiesto' %}{{ manifiesto.id }}" target="_blanck">{{ manifiesto.numero }}</a>
 	</p>
 
 	<button><a href="{% url 'manifiesto-update' manifiesto.id %}">Editar</a></button>

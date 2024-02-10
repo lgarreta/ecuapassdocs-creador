@@ -12,6 +12,8 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     path("cartaporte/", CartaporteDocView.as_view(), name="cartaporte"),
+    path("cartaporte/importacion", CartaporteDocView.as_view(), name="cartaporte-importacion"),
+    path("cartaporte/exportacion", CartaporteDocView.as_view(), name="cartaporte-exportacion"),
     path('cartaporte/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
     path('cartaporte/<pk>/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
     path('cartaporte/<pk>/', CartaporteDocView.as_view(), name='cartaporte-documento'),
@@ -24,6 +26,8 @@ urlpatterns = [
 
 
     path("manifiesto/", ManifiestoDocView.as_view(), name="manifiesto"),
+    path("manifiesto/importacion", ManifiestoDocView.as_view(), name="manifiesto-importacion"),
+    path("manifiesto/exportacion", ManifiestoDocView.as_view(), name="manifiesto-exportacion"),
     path('manifiesto/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('manifiesto/<pk>/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),

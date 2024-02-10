@@ -133,6 +133,10 @@
 		//-------------------------------------------------------------
 		let inputsParameters = {{ input_parameters|safe }};
 
+		// Create input textareas for the html form
+		const inputsContainer = document.querySelector(".container");
+		const textAreas = createInputTextareas (inputsParameters, inputsContainer);
+
 		window.jsPDF = window.jspdf.jsPDF;
 		let pdf = new jsPDF();
 
@@ -141,22 +145,6 @@
 		let FONTSIZE = "";
 		let textArea = "";
 		let text     = "";
-
-		// Create textarea inputs
-
-		function getTextAreasByClassName (className) {
-			let selectedTextAreas = []
-			textAreas.forEach (textArea => {
-				if (textArea.className.includes (className)) {
-					selectedTextAreas.push (textArea)
-				}
-			});
-			return (selectedTextAreas);
-		}
-
-		// Create input textareas for the html form
-		const inputsContainer = document.querySelector(".container");
-		const textAreas = createInputTextareas (inputsParameters, inputsContainer);
 
 		// Set restrictions and styles for each input textarea
 		setParametersToInputs (textAreas, inputsParameters);
@@ -209,6 +197,16 @@
 			});
 
 			// Scripts for autocomplete options in input fields
+			function getTextAreasByClassName (className) {
+				let selectedTextAreas = []
+				textAreas.forEach (textArea => {
+					if (textArea.className.includes (className)) {
+						selectedTextAreas.push (textArea)
+					}
+				});
+				return (selectedTextAreas);
+			}
+
 			let vehiculoInputs = getTextAreasByClassName ("input_placaPais")
 			vehiculoInputs.forEach (inputName => {
 				createAutocomplete(new AutoCompletePlacaPais (inputName)) 

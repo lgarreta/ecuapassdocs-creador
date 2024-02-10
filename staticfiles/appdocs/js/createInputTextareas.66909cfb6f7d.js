@@ -14,7 +14,13 @@ function createInputTextareas (inputsParameters, inputsContainer) {
 		// Restrictions like "hidden" or "readonly"
 		if ("restrictions" in input) {
 			input ["restrictions"].forEach (restriction => {
-				textarea.setAttribute (restriction, restriction);
+				if (restriction.includes ("color")) {
+					let color = restriction.split ("=")[1]
+					console.log ("COLOR:", color)
+					textarea.style.color = color
+				}else {
+					textarea.setAttribute (restriction, restriction);
+				}
 			});
 		}
 
