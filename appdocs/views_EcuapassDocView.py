@@ -49,7 +49,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			inputParameters = self.setValuesToInputs (pk, inputParameters)
 			
 		# Set "codigo pais" ("CO", "EC") from URL pattern ("exportacion" or "importacion")
-		# Values is set into "txt-1" key of inputParameters (Valid for NTA and BYZA)
+		# Values is set into "txt0a" key of inputParameters (Valid for NTA and BYZA)
 		inputParameters = self.getCodigoPaisFromURL (request, inputParameters)
 
 		# Send input fields parameters (bounds, maxLines, maxChars, ...)
@@ -98,18 +98,23 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			print (">>> Error: No se conoce opción del botón presionado:", button_type)
 
 	#-------------------------------------------------------------------
-	#-- Set codigo pais: CO : importacion or EC : exportacion 
+	#-- Get or set codigo pais: CO : importacion or EC : exportacion 
 	#-------------------------------------------------------------------
 	def getCodigoPaisFromURL (self, request, inputParameters):
-		urlName = resolve(request.path_info).url_name
-		
-		if "importacion" in urlName:
-			inputParameters ["txt-1"]["value"] = "CO" 
-		elif "exportacion" in urlName:
-			inputParameters ["txt-1"]["value"] = "EC" 
+		# Try to get previous
+		codigoPais = inputParameters ["txt0a"]["value"]
+		if codigoPais in ["CO", "EC"]:
+			return inputParameters
 		else:
-			print (f"Alerta: No se pudo determinar código pais desde el URL: '{urlName}'")
-			inputParameters ["txt-1"]["value"] = "" 
+			urlName = resolve(request.path_info).url_name
+			
+			if "importacion" in urlName:
+				inputParameters ["txt0a"]["value"] = "CO" 
+			elif "exportacion" in urlName:
+				inputParameters ["txt0a"]["value"] = "EC" 
+			else:
+				print (f"Alerta: No se pudo determinar código pais desde el URL: '{urlName}'")
+				inputParameters ["txt0a"]["value"] = "" 
 
 		return inputParameters
 
@@ -226,6 +231,6 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	#-- Uses "codigo pais" as prefix (for NTA, BYZA)
 	#-------------------------------------------------------------------
 	def createDocumentNumber (self, inputValues, id):
-		codigoPais = inputValues ["txt-1"]
+		codigoPais = inputValues ["txt0a"]
 		numero = f"{codigoPais}{2000000 + id}"
 		return (numero)

@@ -30,7 +30,7 @@ class Empresa (models.Model):
 #--------------------------------------------------------------------
 class CartaporteDoc (models.Model):
 	numero = models.CharField (max_length=20)
-	#txt-1 = models.CharField (max_length=20, null=True)
+	txt0a = models.CharField (max_length=20, null=True)
 	txt00 = models.CharField (max_length=20, null=True)
 	txt01 = models.CharField (max_length=200, null=True)
 	txt02 = models.CharField (max_length=200, null=True)
