@@ -85,12 +85,12 @@ WSGI_APPLICATION = "appdocs_main.wsgi.application"
 DATABASES = {
 	'default': {
 		'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-		#'NAME'	  : os.environ.get ('PGDATABASE'),
-		'NAME'	  : 'ecuapassdocsdb',
-		#'USER'	  : os.environ.get ('PGUSER'),
-		'USER'	  : 'byza',
-		#'PASSWORD': os.environ.get ('PGPASSWORD'),
-		'PASSWORD': 'byza2024A.',
+		'NAME'	  : os.environ.get ('PGDATABASE'),
+		#'NAME'	  : 'ecuapassdocsdb',
+		'USER'	  : os.environ.get ('PGUSER'),
+		#'USER'	  : 'byza',
+		'PASSWORD': os.environ.get ('PGPASSWORD'),
+		#'PASSWORD': 'byza2024A.',
 		'HOST'	  : os.environ.get ('PGHOST'),
 		'PORT'	  : os.environ.get ('PGPORT'),
 	}
