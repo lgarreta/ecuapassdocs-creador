@@ -16,7 +16,8 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
+#SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-*e!pw-wwqm=az^o+oy0a$2u$rhkf(05i&!c3ic8@49dsh9&hmi')
 
 DEBUG = config('DEBUG', cast=bool)
 
@@ -85,12 +86,12 @@ WSGI_APPLICATION = "appdocs_main.wsgi.application"
 DATABASES = {
 	'default': {
 		'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-		'NAME'	  : os.environ.get ('PGDATABASE'),
-		#'NAME'	  : 'ecuapassdocsdb',
-		'USER'	  : os.environ.get ('PGUSER'),
-		#'USER'	  : 'byza',
-		'PASSWORD': os.environ.get ('PGPASSWORD'),
-		#'PASSWORD': 'byza2024A.',
+		#'NAME'	  : os.environ.get ('PGDATABASE'),
+		'NAME'	  : 'ecuapassdocsdb',
+		#'USER'	  : os.environ.get ('PGUSER'),
+		'USER'	  : 'byza',
+		#'PASSWORD': os.environ.get ('PGPASSWORD'),
+		'PASSWORD': 'byza2024A.',
 		'HOST'	  : os.environ.get ('PGHOST'),
 		'PORT'	  : os.environ.get ('PGPORT'),
 	}
