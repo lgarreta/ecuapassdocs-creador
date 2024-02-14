@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
 	"django.middleware.security.SecurityMiddleware",
+	'whitenoise.middleware.WhiteNoiseMiddleware',
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
@@ -148,6 +149,14 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 STATIC_URL	= "staticfiles/"
 STATIC_ROOT = os.path.join (BASE_DIR, 'staticfiles')
 
+# Static file serving.
+# https://whitenoise.readthedocs.io/en/stable/django.html#add-compression-and-caching-support
+STORAGES = {
+	# ...
+	"staticfiles": {
+		"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+	},
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
