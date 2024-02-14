@@ -7,6 +7,8 @@ from django.urls import reverse  # To generate URLS by reversing URL patterns
 from ecuapassdocs.ecuapassinfo.ecuapass_utils import Utils
 from ecuapassdocs.ecuapassinfo.ecuapass_info_cartaporte_BYZA import CartaporteByza
 
+from appusuarios.models import UsuarioEcuapass
+
 #--------------------------------------------------------------------
 # Model Empresa
 #--------------------------------------------------------------------
@@ -92,8 +94,11 @@ class CartaporteDoc (models.Model):
 class Cartaporte (models.Model):
 	numero        = models.CharField (max_length=20)
 	remitente     = models.ForeignKey (Empresa, on_delete=models.CASCADE, null=True)
-	documento     = models.OneToOneField (CartaporteDoc, on_delete=models.CASCADE, null=True)
+
+	documento     = models.OneToOneField (CartaporteDoc, on_delete=models.SET_NULL, null=True)
 	fecha_emision = models.DateField (default=date.today)
+	procedimiento = models.CharField (max_length=30)
+	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.DO_NOTHING, null=True)
 
 	def get_absolute_url(self):
 		"""Returns the url to access a particular language instance."""

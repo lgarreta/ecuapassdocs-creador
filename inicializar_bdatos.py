@@ -6,10 +6,10 @@ import psycopg2
 
 #from psycopg2 import sql
 
-"""
 a = input ("Remove sqlite...")
 os.system ("rm db.sqlite3")
 os.system ("rm appdocs/migrations/00*.py")
+os.system ("rm appusuarios/migrations/00*.py")
 
 a = input ("Makemigrations...")
 os.system ("python manage.py makemigrations")
@@ -25,8 +25,8 @@ os.system ("python manage.py createsuperuser ")
 conn = sqlite3.connect('db.sqlite3')
 # Create a cursor object to interact with the database
 cursor = conn.cursor()
-"""
 
+"""
 # Local posgress DB
 db_params= {
     'dbname': 'ecuapassdocsdb',
@@ -161,7 +161,7 @@ try:
 except:
     print (format_exc())
     print ("Datos Manifiestos ya existen")
- 
+""" 
 
 # Commit the changes and close the connection
 conn.commit()

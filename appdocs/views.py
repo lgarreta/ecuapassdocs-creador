@@ -169,3 +169,21 @@ class InfoView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+
+#--------------------------------------------------------------------
+# Messages view
+#--------------------------------------------------------------------
+def messagesView (request):
+    if request.method == 'POST':
+        # Process your form data... (replace with your actual logic)
+        if form.is_valid():
+            # Success message
+            message = constants.SUCCESS
+            get_messages(request).add(message, "Your form has been submitted successfully!")
+        else:
+            # Error message
+            message = constants.ERROR
+            get_messages(request).add(message, "There were errors in your form data. Please try again.")
+    # Render your template
+    return render(request, 'my_template.html')

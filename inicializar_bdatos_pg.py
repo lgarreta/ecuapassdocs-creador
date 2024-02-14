@@ -15,7 +15,7 @@ os.system ("python manage.py migrate")
 a = input ("Superuser...")
 os.system ("python manage.py createsuperuser ")
 
-
+"""
 # PostgreSQL database connection parameters
 # Local posgress DB
 #db_params= {
@@ -88,4 +88,4 @@ if __name__ == '__main__':
     populate_database (vehiculos_data, "appdocs_vehiculo")
     populate_database (empresas_data, "appdocs_empresa")
     populate_database (conductores_data, "appdocs_conductor")
-
+"""

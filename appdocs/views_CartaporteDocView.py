@@ -25,7 +25,7 @@ class CartaporteDocView (EcuapassDocView):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__ ("cartaporte", "cartaporte-forma.html", "cartaporte_input_parameters.json", *args, **kwargs)
-
+	
 	#----------------------------------------------------------------
 	#-- Embed fields info (key:value) into PDF doc
 	#-- Info is embedded according to Azure format

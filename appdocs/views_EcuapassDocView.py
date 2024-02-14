@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
+from django.contrib.messages import get_messages, constants # For messages to user 
 
 # For CSRF protection
 from django.utils.decorators import method_decorator
@@ -22,6 +23,7 @@ from .pdfcreator import CreadorPDF
 
 from .models import Cartaporte, Manifiesto
 from .models import CartaporteDoc, ManifiestoDoc
+from appusuarios.models import UsuarioEcuapass
 #from .pdfcreator import CreadorPDF
 
 #--------------------------------------------------------------------
@@ -40,6 +42,14 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	# Envía los parámetros o restricciones para cada campo en la forma de HTML
 	#-------------------------------------------------------------------
 	def get (self, request, *args, **kwargs):
+		# Check if user has reached his total number of documents
+		if self.limiteDocumentosAsignados (request.user, self.docType):
+			# Error message
+			message = constants.ERROR
+			get_messages (request).add (message, "Límite de documents alcanzado. No puede crear documentos.")
+			return render(request, 'messages.html')
+			
+			
 		# If edit, retrieve the additional parameter from kwargs
 		pk = kwargs.get ('pk')
 
@@ -62,6 +72,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	@method_decorator(csrf_protect)
 	def post (self, request, *args, **kargs):
+
 		# Get values from html form
 		button_type = request.POST.get('boton_pdf', '').lower()
 
@@ -80,10 +91,10 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			return pdf_response
 		elif "original" in button_type:
 			if docNumber == "" or docNumber == "CLON" or docNumber == "PRELIMINAR": 
-				docNumber = self.saveDocumentToDB (inputValues, fieldValues, "GET-ID")
+				docNumber = self.saveDocumentToDB (inputValues, fieldValues, request.user, "GET-ID")
 				return JsonResponse ({'numero': docNumber}, safe=False)
 			else: 
-				self.saveDocumentToDB (inputValues, fieldValues, "SAVE-DATA")
+				self.saveDocumentToDB (inputValues, fieldValues, request.user, "SAVE-DATA")
 				return pdf_response
 		elif "copia" in button_type:
 			if inputValues ["txt00"] != "": 	
@@ -184,7 +195,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	#-- Save document to DB
 	#-------------------------------------------------------------------
-	def saveDocumentToDB (self, inputValues, fieldValues, flagSave):
+	def saveDocumentToDB (self, inputValues, fieldValues, username, flagSave):
 		docClass, modelClass = None, None
 		if self.docType == "cartaporte":
 			docClass, modelClass = CartaporteDoc, Cartaporte
@@ -199,8 +210,9 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			# Save Cartaporte document
 			ecuapassDoc = docClass ()
 			ecuapassDoc.save ()
-			ecuapassDoc.numero = self.createDocumentNumber (inputValues, ecuapassDoc.id)
+			ecuapassDoc.numero = self.getDocumentNumber (inputValues, ecuapassDoc.id)
 			ecuapassDoc.save ()
+			self.actualizarNroDocumentosCreados (username, self.docType)
 
 			# Save Cartaporte register
 			manifiestoReg = modelClass (id=ecuapassDoc.id)
@@ -227,10 +239,32 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			return inputValues
 
 	#-------------------------------------------------------------------
+	# Handle assigned documents
+	#-------------------------------------------------------------------
+	#-- Return if user has reached his max number of asigned documents
+	def limiteDocumentosAsignados (self, username, docType):
+		user = get_object_or_404 (UsuarioEcuapass, username=username)
+		print (f">>> User: '{username}'. '{docType}'.  Creados: {user.nro_docs_creados}. Asignados: {user.nro_docs_asignados}")
+		
+		if (user.nro_docs_creados  >= user.nro_docs_asignados):
+			return True
+
+		return False
+
+	#-- Only for "cartaportes". Retrieve the object from the DB, increment docs, and save
+	def actualizarNroDocumentosCreados (self, username, docType):
+		if (docType != "cartaporte"):
+			return
+
+		user = get_object_or_404 (UsuarioEcuapass, username=username)
+		user.nro_docs_creados += 1  # or any other value you want to increment by
+		user.save()		
+	#-------------------------------------------------------------------
 	#-- Create a formated document number ranging from 2000000 
 	#-- Uses "codigo pais" as prefix (for NTA, BYZA)
 	#-------------------------------------------------------------------
-	def createDocumentNumber (self, inputValues, id):
+	def getDocumentNumber (self, inputValues, id):
 		codigoPais = inputValues ["txt0a"]
 		numero = f"{codigoPais}{2000000 + id}"
 		return (numero)
+
