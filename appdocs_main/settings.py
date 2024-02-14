@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = config('SECRET_KEY')
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-*e!pw-wwqm=az^o+oy0a$2u$rhkf(05i&!c3ic8@49dsh9&hmi')
 
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS = ['ecuapassdocs-production.up.railway.app', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://ecuapassdocs-production.up.railway.app']
