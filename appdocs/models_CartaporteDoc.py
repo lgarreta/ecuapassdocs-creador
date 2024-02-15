@@ -8,25 +8,8 @@ from ecuapassdocs.ecuapassinfo.ecuapass_utils import Utils
 from ecuapassdocs.ecuapassinfo.ecuapass_info_cartaporte_BYZA import CartaporteByza
 
 from appusuarios.models import UsuarioEcuapass
+from appdocs.models_Entidades import Empresa
 
-#--------------------------------------------------------------------
-# Model Empresa
-#--------------------------------------------------------------------
-class Empresa (models.Model):
-	numeroId     = models.CharField (max_length=50)
-	nombre       = models.CharField (max_length=50)
-	direccion    = models.CharField (max_length=100)
-	ciudad       = models.CharField (max_length=50)
-	pais         = models.CharField (max_length=20)
-	tipoId       = models.CharField (max_length=20)
-
-	def get_absolute_url(self):
-		"""Returns the url to access a particular language instance."""
-		return reverse('empresa-detail', args=[str(self.id)])
-
-	def __str__ (self):
-		return f"{self.nombre} {self.ciudad}-{self.pais}"
-	
 #--------------------------------------------------------------------
 # Model CartaporteDoc
 #--------------------------------------------------------------------

@@ -5,11 +5,13 @@ from .views import InfoView
 
 from .views_CartaporteDocView import *
 from .views_ManifiestoDocView import *
+from .views_DeclaracionDocView import *
 
 #app_name = "appdocs"
 
 urlpatterns = [
     path('', views.index, name='index'),
+
     path("cartaporte/", CartaporteDocView.as_view(), name="cartaporte"),
     path("cartaporte/importacion", CartaporteDocView.as_view(), name="cartaporte-importacion"),
     path("cartaporte/exportacion", CartaporteDocView.as_view(), name="cartaporte-exportacion"),
@@ -22,7 +24,6 @@ urlpatterns = [
     path('cartaporte/create/', views.CartaporteCreate.as_view(), name='cartaporte-create'),
     path('cartaporte/<pk>/update/', views.CartaporteUpdate.as_view(), name='cartaporte-update'),
     path('cartaporte/<pk>/delete/', views.CartaporteDelete.as_view(), name='cartaporte-delete'),
-
 
     path("manifiesto/", ManifiestoDocView.as_view(), name="manifiesto"),
     path("manifiesto/importacion", ManifiestoDocView.as_view(), name="manifiesto-importacion"),
@@ -39,6 +40,11 @@ urlpatterns = [
     path('manifiesto/<pk>/update/', views.ManifiestoUpdate.as_view(), name='manifiesto-update'),
     path('manifiesto/<pk>/delete/', views.ManifiestoDelete.as_view(), name='manifiesto-delete'),
 
+
+	#-- URLs declaracion -----------------------------------------------
+    path("declaracion/", DeclaracionDocView.as_view(), name="declaracion"),
+    path('declaraciones/', views.DeclaracionListView.as_view(), name='declaraciones'),
+	#-------------------------------------------------------------------
 
     path('empresas/', views.EmpresaListView.as_view(), name='empresas'),
     path('empresa/<pk>', views.EmpresaDetailView.as_view(), name='empresa-detail'),

@@ -4,7 +4,8 @@ from django.contrib import messages
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
 
 from .models import UsuarioEcuapass
 from .tables import UserTable
@@ -14,19 +15,19 @@ class UserCreate (LoginRequiredMixin, CreateView):
 	model = UsuarioEcuapass
 	fields = ['username','email', 'first_name', 'last_name', 'password', 'perfil', 
 	          'nro_docs_creados', 'nro_docs_asignados']
-	template_name = 'appusuarios/user_create.html'
+	template_name = 'user_create.html'
 	success_url = reverse_lazy ('listar')
 
 class UserDelete (LoginRequiredMixin, DeleteView):
 	model = UsuarioEcuapass
-	template_name = 'appusuarios/user_delete.html'
+	template_name = 'user_delete.html'
 	success_url = reverse_lazy ('listar')
 
 class UserUpdate (LoginRequiredMixin, UpdateView):
 	model = UsuarioEcuapass
 	fields = ['username','email', 'first_name', 'last_name', 'perfil', 
 	          'nro_docs_creados', 'nro_docs_asignados']
-	template_name = 'appusuarios/user_update.html'
+	template_name = 'user_update.html'
 	success_url = reverse_lazy ('listar')
 
 	def get_form(self, form_class=None):
@@ -34,14 +35,15 @@ class UserUpdate (LoginRequiredMixin, UpdateView):
 		form.fields['username'].widget.attrs['readonly'] = True  # Set username field as readonly
 		return form	
 
-#def user_list (request):
-#	users = UsuarioEcuapass.objects.all ()
-#	return render (request, 'appusuarios/user_list.html', {'users': users})
-
 def user_list(request):
+	print ("--- user_list ---")
+	if (not request.user.is_staff):
+		url =  reverse_lazy ("index")
+		return redirect (url)
+
 	users = UsuarioEcuapass.objects.all()
 	table = UserTable (users)
-	return render(request, 'appusuarios/user_list.html', {'table': table})	
+	return render(request, 'user_list.html', {'table': table})	
 
 def registration (request):
 	if request.method == 'POST':
@@ -75,5 +77,5 @@ def registration (request):
 
 	else:
 		form = RegistrationForm()
-	return render(request, 'appusuarios/registration.html', {'form': form})
+	return render(request, 'registration.html', {'form': form})
 

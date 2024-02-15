@@ -21,8 +21,9 @@ from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader
 #from ecuapassdocs.ecuapassutils.pdfcreator import CreadorPDF 
 from .pdfcreator import CreadorPDF 
 
-from .models import Cartaporte, Manifiesto
-from .models import CartaporteDoc, ManifiestoDoc
+from .models import Cartaporte, Manifiesto, Declaracion
+from .models import CartaporteDoc, ManifiestoDoc, DeclaracionDoc
+
 from appusuarios.models import UsuarioEcuapass
 #from .pdfcreator import CreadorPDF
 
@@ -44,7 +45,6 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	def get (self, request, *args, **kwargs):
 		# Check if user has reached his total number of documents
 		if self.limiteDocumentosAsignados (request.user, self.docType):
-			# Error message
 			message = constants.ERROR
 			get_messages (request).add (message, "Límite de documents alcanzado. No puede crear documentos.")
 			return render(request, 'messages.html')
@@ -55,6 +55,7 @@ class EcuapassDocView(LoginRequiredMixin, View):
 
 		# Load parameters from package
 		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
+		print ("-- parametersFile --", self.parametersFile)
 		if pk:
 			inputParameters = self.setValuesToInputs (pk, inputParameters)
 			
@@ -151,7 +152,6 @@ class EcuapassDocView(LoginRequiredMixin, View):
 		jsonFieldsDic = {}
 		# Load parameters from package
 		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
-
 		for key, params in inputParameters.items():
 			fieldName    = params ["field"]
 			value        = inputValues [key]
@@ -201,6 +201,8 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			docClass, modelClass = CartaporteDoc, Cartaporte
 		elif self.docType == "manifiesto":
 			docClass, modelClass = ManifiestoDoc, Manifiesto
+		elif self.docType == "declaracion":
+			docClass, modelClass = DeclaracionDoc, Declaracion 
 		else:
 			print (f"Error: Tipo de documento '{docType}' no soportado")
 			sys.exit (0)

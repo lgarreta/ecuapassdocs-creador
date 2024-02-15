@@ -28,6 +28,7 @@ CSRF_TRUSTED_ORIGINS = ['https://ecuapassdocs-production.up.railway.app']
 # Application definition
 
 INSTALLED_APPS = [
+	"appreportes",
 	"appdocs.apps.AppdocsConfig",
 	"appusuarios.apps.UsuariosConfig",
 	'django_tables2',
@@ -59,7 +60,7 @@ TEMPLATES = [
 	{
 		"BACKEND": "django.template.backends.django.DjangoTemplates",
 		#"DIRS": [],
-		'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+		'DIRS': [os.path.join (BASE_DIR, 'templates'),],
 		"APP_DIRS": True,
 		"OPTIONS": {
 			"context_processors": [
@@ -78,27 +79,27 @@ WSGI_APPLICATION = "appdocs_main.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-	"default": {
-		"ENGINE": "django.db.backends.sqlite3",
-		"NAME": BASE_DIR / "db.sqlite3",
-	}
-}
-
-# Remote railway database
 #DATABASES = {
-#	'default': {
-#		'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-#		#'NAME'	  : os.environ.get ('PGDATABASE'),
-#		'NAME'	  : 'ecuapassdocsdb',
-#		#'USER'	  : os.environ.get ('PGUSER'),
-#		'USER'	  : 'byza',
-#		#'PASSWORD': os.environ.get ('PGPASSWORD'),
-#		'PASSWORD': 'byza2024A.',
-#		'HOST'	  : os.environ.get ('PGHOST'),
-#		'PORT'	  : os.environ.get ('PGPORT'),
+#	"default": {
+#		"ENGINE": "django.db.backends.sqlite3",
+#		"NAME": BASE_DIR / "db.sqlite3",
 #	}
 #}
+
+# Remote railway database
+DATABASES = {
+	'default': {
+		'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+		#'NAME'	  : os.environ.get ('PGDATABASE'),
+		'NAME'	  : 'ecuapassdocsdb',
+		#'USER'	  : os.environ.get ('PGUSER'),
+		'USER'	  : 'byza',
+		#'PASSWORD': os.environ.get ('PGPASSWORD'),
+		'PASSWORD': 'byza2024A.',
+		'HOST'	  : os.environ.get ('PGHOST'),
+		'PORT'	  : os.environ.get ('PGPORT'),
+	}
+}
 
 ## Local postgress database
 #DATABASES = {
@@ -117,9 +118,9 @@ DATABASES = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-	{ "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
+	#{ "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
 	{ "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
-	{ "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+	#{ "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
 	{ "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 

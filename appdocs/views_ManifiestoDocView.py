@@ -16,7 +16,8 @@ from django.db.models import Q
 
 # Own imports
 from .views_EcuapassDocView import EcuapassDocView
-from .models_ManifiestoDoc import ManifiestoDoc, Manifiesto, Vehiculo, Conductor
+#from .models_ManifiestoDoc import ManifiestoDoc, Manifiesto, Vehiculo, Conductor
+from .models import ManifiestoDoc, Manifiesto, Vehiculo, Conductor
 
 #--------------------------------------------------------------------
 #-- Vista para manejar las solicitudes de manifiesto

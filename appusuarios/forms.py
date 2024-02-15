@@ -38,8 +38,7 @@ class RegistrationForm (UserCreationForm):
 
 	class Meta:
 		model = UsuarioEcuapass
-		fields =  ('username', 'email', 'first_name', 'last_name', 'perfil', 
-		           'nro_docs_creados', 'nro_docs_asignados')
+		fields =  ('username', 'email', 'first_name', 'last_name', 'perfil', 'nro_docs_asignados')
 
 	def __init__ (self, *args, **kwargs):
 		super().__init__ (*args, **kwargs)

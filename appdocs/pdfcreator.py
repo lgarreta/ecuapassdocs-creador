@@ -31,6 +31,11 @@ class CreadorPDF:
 			self.backgroundImg = ResourceLoader.loadImage ("docs", 'cartaporte-vacia-SILOG-BYZA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'cartaporte_input_parameters.json')
 			self.prefix = "CPI"
+		elif docType == "declaracion":
+			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'declaracion-vacia-NTA.pdf')
+			self.backgroundImg = ResourceLoader.loadImage ("docs", 'declaracion-vacia-NTA.png')
+			self.inputBounds   = ResourceLoader.loadJson ("docs", 'declaracion_input_parameters.json')
+			self.prefix = "CPI"
 		else:
 			print (f"Error: Tipo de documento '{docType}' no soportado")
 			sys.exit (0)
@@ -116,7 +121,7 @@ class CreadorPDF:
 	#-- Info is embedded according to Azure format
 	#----------------------------------------------------------------
 	def embedFieldsIntoPDF (self, pdfCanvas, inputBounds, inputValues):
-		if self.docType == "manifiesto":
+		if self.docType == "manifiesto" or self.docType == "declaracion":
 			return self.embedFieldsIntoPDFManifiesto (pdfCanvas, inputBounds, inputValues)
 		elif self.docType == "cartaporte":
 			return self.embedFieldsIntoPDFCartaporte (pdfCanvas, inputBounds, inputValues)

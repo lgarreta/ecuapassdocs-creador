@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
-from .models_CartaporteDoc import Empresa, Cartaporte, CartaporteDoc
-from .models_ManifiestoDoc import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
+#from .models_CartaporteDoc import Empresa, Cartaporte, CartaporteDoc
+#from .models_ManifiestoDoc import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
 
+from .models_CartaporteDoc import Cartaporte, CartaporteDoc
+from .models_ManifiestoDoc import Manifiesto, ManifiestoDoc
+from .models_DeclaracionDoc import Declaracion, DeclaracionDoc
+from .models_Entidades import Empresa, Conductor, Vehiculo
 
 def index(request):
-	print ("--- index appdocs ---")
 	"""
 	Función vista para la página inicio del sitio.
 	"""
@@ -175,6 +178,11 @@ class InfoView(View):
 	def get(self, request, *args, **kwargs):
 		return render(request, self.template_name)
 
+#--------------------------------------------------------------------
+#-- Declaraciones
+#--------------------------------------------------------------------
+class DeclaracionListView(generic.ListView):
+	model = Declaracion
 
 #--------------------------------------------------------------------
 # Messages view

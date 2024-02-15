@@ -18,7 +18,7 @@ from .views_EcuapassDocView import EcuapassDocView
 from .models_CartaporteDoc import CartaporteDoc, Cartaporte, Empresa
 
 #--------------------------------------------------------------------
-#-- Vista para manejar las solicitudes de manifiesto
+#-- Vista para manejar las solicitudes de cartaporte
 #--------------------------------------------------------------------
 class CartaporteDocView (EcuapassDocView):
 	template_name = "cartaporte-forma.html"
