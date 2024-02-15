@@ -10,7 +10,6 @@ from .views_ManifiestoDocView import *
 
 urlpatterns = [
     path('', views.index, name='index'),
-
     path("cartaporte/", CartaporteDocView.as_view(), name="cartaporte"),
     path("cartaporte/importacion", CartaporteDocView.as_view(), name="cartaporte-importacion"),
     path("cartaporte/exportacion", CartaporteDocView.as_view(), name="cartaporte-exportacion"),

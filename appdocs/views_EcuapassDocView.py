@@ -239,14 +239,14 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			return inputValues
 
 	#-------------------------------------------------------------------
-	# Handle assigned documents
+	# Handle assigned documents for "externo" user profile
 	#-------------------------------------------------------------------
 	#-- Return if user has reached his max number of asigned documents
 	def limiteDocumentosAsignados (self, username, docType):
 		user = get_object_or_404 (UsuarioEcuapass, username=username)
 		print (f">>> User: '{username}'. '{docType}'.  Creados: {user.nro_docs_creados}. Asignados: {user.nro_docs_asignados}")
 		
-		if (user.nro_docs_creados  >= user.nro_docs_asignados):
+		if (user.perfil == "externo" and user.nro_docs_creados  >= user.nro_docs_asignados):
 			return True
 
 		return False
