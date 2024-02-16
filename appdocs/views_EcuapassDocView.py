@@ -207,36 +207,36 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			print (f"Error: Tipo de documento '{docType}' no soportado")
 			sys.exit (0)
 			
-		# Create ecuapassDoc and save it to get id
+		# Create documentDoc and save it to get id
 		if flagSave == "GET-ID":
 			# Save Cartaporte document
-			ecuapassDoc = docClass ()
-			ecuapassDoc.save ()
-			ecuapassDoc.numero = self.getDocumentNumber (inputValues, ecuapassDoc.id)
-			ecuapassDoc.save ()
+			documentDoc = docClass ()
+			documentDoc.save ()
+			documentDoc.numero = self.getDocumentNumber (inputValues, documentDoc.id)
+			documentDoc.save ()
 			self.actualizarNroDocumentosCreados (username, self.docType)
 
 			# Save Cartaporte register
-			manifiestoReg = modelClass (id=ecuapassDoc.id)
-			manifiestoReg.setValues (ecuapassDoc, fieldValues)
-			manifiestoReg.save ()
+			documentModel = modelClass (id=documentDoc.id)
+			documentModel.setValues (documentDoc, fieldValues)
+			documentModel.save ()
 
-			return ecuapassDoc.numero
+			return documentDoc.numero
 		elif flagSave == "SAVE-DATA":
 			# Retrieve instance and save Cartaporte document
 			docNumber = inputValues ["txt00"]
-			ecuapassDoc = get_object_or_404 (docClass, numero=docNumber)
+			documentDoc = get_object_or_404 (docClass, numero=docNumber)
 
 			# Assign values to the attributes using dictionary keys
 			for key, value in inputValues.items():
-				setattr(ecuapassDoc, key, value)
+				setattr(documentDoc, key, value)
 
-			ecuapassDoc.save ()
+			documentDoc.save ()
 
 			# Retrieve and save Cartaporte register
-			manifiestoReg = get_object_or_404 (modelClass, numero=docNumber)
-			manifiestoReg.setValues (ecuapassDoc, fieldValues)
-			manifiestoReg.save ()
+			documentModel = get_object_or_404 (modelClass, numero=docNumber)
+			documentModel.setValues (documentDoc, fieldValues)
+			documentModel.save ()
 
 			return inputValues
 

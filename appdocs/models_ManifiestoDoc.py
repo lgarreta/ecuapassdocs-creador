@@ -104,13 +104,14 @@ class Manifiesto (models.Model):
 		
 	
 	def getCartaporte (self, manifiestoInfo):
-		numero = None
+		numeroCartaporte = None
 		try:
-			numero = manifiesto.getNumeroCPIC ()
-			record = Cartaporte.objects.get (numero=desired_value)
+			numeroCartaporte = manifiestoInfo.getNumeroCPIC ()
+			record = Cartaporte.objects.get (numero=numeroCartaporte)
 			return record
 		except: 
-			print (f"Exepcion: Cartaporte número '{numero}' no encontrado.")
+			Utils.printException ("Excepcion in getCartaporte")
+			Utils.printException (f"Exepcion: Cartaporte número '{numeroCartaporte}' no encontrado.")
 		return None
 
 		
