@@ -15,8 +15,12 @@ urlpatterns = [
     path("cartaporte/", CartaporteDocView.as_view(), name="cartaporte"),
     path("cartaporte/importacion", CartaporteDocView.as_view(), name="cartaporte-importacion"),
     path("cartaporte/exportacion", CartaporteDocView.as_view(), name="cartaporte-exportacion"),
+
     path('cartaporte/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
     path('cartaporte/<pk>/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
+    path('cartaporte/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
+    path('cartaporte/<pk>/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
+
     path('cartaporte/<pk>/', CartaporteDocView.as_view(), name='cartaporte-documento'),
 
     path('cartaportes/', views.CartaporteListView.as_view(), name='cartaportes'),
@@ -30,6 +34,10 @@ urlpatterns = [
     path("manifiesto/exportacion", ManifiestoDocView.as_view(), name="manifiesto-exportacion"),
     path('manifiesto/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
+
+    path('manifiesto/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
+    path('manifiesto/<pk>/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
+
     path('manifiesto/<pk>/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/<pk>/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('manifiesto/<pk>/', ManifiestoDocView.as_view(), name='manifiesto-documento'),

@@ -51,17 +51,19 @@ class ManifiestoDoc (models.Model):
 	txt25_5 = models.CharField (max_length=200, null=True)
 	txt26 = models.CharField (max_length=200, null=True)
 	txt27 = models.CharField (max_length=200, null=True)
-	txt28 = models.CharField (max_length=200, null=True)
-	txt29 = models.CharField (max_length=800, null=True)
-	txt30 = models.CharField (max_length=200, null=True)
-	txt31 = models.CharField (max_length=200, null=True)
-	txt32_1 = models.CharField (max_length=200, null=True)
-	txt32_2 = models.CharField (max_length=200, null=True)
-	txt32_3 = models.CharField (max_length=200, null=True)
-	txt32_4 = models.CharField (max_length=200, null=True)
-	txt33_1 = models.CharField (max_length=200, null=True)
-	txt33_2 = models.CharField (max_length=200, null=True)
-	txt34 = models.CharField (max_length=200, null=True)
+	#-- Info mercancia (cartaporte, descripcion, ...totales ----
+	txt28 = models.CharField (max_length=200, null=True)    # Cartaporte
+	txt29 = models.CharField (max_length=800, null=True)    # Descripcion
+	txt30 = models.CharField (max_length=200, null=True)    # Cantidad
+	txt31 = models.CharField (max_length=200, null=True)    # Marca
+	txt32_1 = models.CharField (max_length=200, null=True)  # Peso bruto
+	txt32_2 = models.CharField (max_length=200, null=True)  # Peso bruto total
+	txt32_3 = models.CharField (max_length=200, null=True)  # Peso neto
+	txt32_4 = models.CharField (max_length=200, null=True)  # Peso neto total
+	txt33_1 = models.CharField (max_length=200, null=True)  # Otra medidad
+	txt33_2 = models.CharField (max_length=200, null=True)  # Total otra medida
+	txt34 = models.CharField (max_length=200, null=True)    # INCOTERMS
+	#------------------------------------------------------------
 	txt35 = models.CharField (max_length=200, null=True)
 	txt36 = models.CharField (max_length=200, null=True)
 	txt37 = models.CharField (max_length=200, null=True)

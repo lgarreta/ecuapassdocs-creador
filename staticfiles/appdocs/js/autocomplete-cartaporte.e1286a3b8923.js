@@ -1,5 +1,6 @@
 // Functions for autocomplete in cartaporte documents
 
+
 // Create autocomplete for an entity
 function createAutocomplete (entity) {
 	inputSelector = entity.inputSelector
@@ -56,3 +57,11 @@ class AutoCompleteEmpresa {
 	}
 }
 
+function setAutocompleteForDocument (documentType) {
+	if (documentType == "cartaporte") {
+		empresaInputs = getTextAreasByClassName ("input_empresa")
+		empresaInputs.forEach (inputName => {
+			createAutocomplete(new AutoCompleteEmpresa (inputName)) 
+		});
+	}
+}

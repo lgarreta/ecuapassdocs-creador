@@ -1,0 +1,186 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- For autocomplete: Include necessary CSS and JS files, e.g., jQuery UI -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+	<!-- Own JS Scripts -->
+	<script src="{% static 'appdocs/js/createInputTextareas.js' %}"></script>
+	<script src="{% static 'appdocs/js/setParametersToInputs.js' %}"></script>
+	<script src="{% static 'appdocs/js/autocomplete-documents.js' %}"></script>
+
+	<title>
+		{% block title %}Documento{% endblock %}
+	</title>
+
+    <style>
+        #container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: visible; 
+        }
+
+        .container {
+            position: absolute;
+            left: 00px; 
+            top: 00px; 
+            width: 1100px; 
+            height: 1424px; 
+
+            background: rgba(55, 55, 255, 0.05); 
+            padding: 00px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 1.0); 
+        }
+
+        #background {
+            background-image: url('{% static  background_image  %}');
+            #background-size: 1699px 2200px; /* Tamaño fijo de la imagen de fondo */
+            #background-size: cover; /* Adjust as needed */
+            background-repeat: no-repeat;
+            width: 1100px; /* Ancho fijo de la imagen de fondo */
+            height: 1424px; /* Alto fijo de la imagen de fondo */
+        }
+
+		/* Style for the form header (containing the pdf-clonar button) */
+		.form-header {
+		  text-align: center;
+		  margin-bottom: 10px;
+		}
+
+		.top-panel {
+		  background-color: #fff0ff;
+		  padding: 03px;
+		  text-align: center;
+		}
+
+		form {
+		  display: flex;
+		  flex-direction: column; /* Align items in a column */
+		  align-items: center;
+		  padding: 10px;
+		}		
+
+		#pdf_preliminar_btn {
+		  background-color: #7CFC00;
+		  color: black;
+		}
+
+		#pdf_original_btn {
+		  background-color: #FFFF00;
+		  color: black;
+		}
+
+		#pdf_copia_btn {
+		  background-color: #F0FFFF;
+		  color: black;
+		}
+
+		#pdf_clonar_btn {
+		  background-color: #ADD8E6;
+		  color: black;
+		}		
+
+		textarea {
+		  resize: none; /* "none" disables resizing */
+		  overflow: hidden ; /* Disable scrolling */
+		  white-space: pre-line; /* Wrap and preserve line breaks */
+		}
+
+		/*****************************************************************************/
+		/*****************************************************************************/
+    	/*** Establece dinamicamente coordenadas X, Y, ancho, alto de los inputsi ****/
+		/*****************************************************************************/
+		/*****************************************************************************/
+
+    </style>
+		<!-- For PDF -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+<body>
+	{% block content %}
+	{% endblock %}
+<script>
+		//-------------------------------------------------------------
+		// Get input parameters from server and apply to form inputs
+		//-------------------------------------------------------------
+		let inputsParameters = {{ input_parameters|safe }};
+		let document_type    = '{{ document_type }}';
+
+		// Create input textareas for the html form
+		const inputsContainer = document.querySelector(".container");
+		const textAreas = createInputTextareas (inputsParameters, inputsContainer);
+
+		// For calculing max chars (obsolete)
+		window.jsPDF = window.jspdf.jsPDF;
+		let pdf = new jsPDF();
+
+		// Set restrictions and styles for each input textarea
+		setParametersToInputs (textAreas, inputsParameters, document_type);
+
+		//-------------------------------------------------------------
+		// For handling "preliminar", "original", "copia", and "clonar" options
+		// and getting preliminar document Id
+		//-------------------------------------------------------------
+		$(document).ready(function () {
+			$('#forma_pdf').submit(function (e) {
+				let formaPdf = this;
+				let submitterButton = e["originalEvent"]["submitter"]["id"];
+				document.getElementById('boton_pdf').value = submitterButton; 
+
+				e.preventDefault();  // Prevent the default form submission
+				var formData = $(this).serialize();
+
+				$.ajax({
+					type: 'POST',
+					url: $(this).attr('action'),
+					data: formData,
+
+					 beforeSend: function (xhr, settings) {
+					 	// Include the CSRF token in the request headers
+					 	xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+					 },
+
+					success: function (data) { // Handle the response from the server
+						let input = document.getElementById("txt00")
+						if (submitterButton.includes ("preliminar")){
+							formaPdf.submit ();
+						}else if (submitterButton.includes ("original")){
+							if (input.value == "" || input.value == "PRELIMINAR" || input.value == "CLON")
+								input.value = data ["numero"]
+							formaPdf.submit ();
+						}else if (submitterButton.includes ("copia")){
+							if (typeof data == "string")  // PDF content
+								formaPdf.submit ();
+							else {                        // Object content
+								alert ("Error: No se ha creado el documento original!")
+							}
+						}else if (submitterButton.includes ("clonar")){
+							input.value = data ["numero"]
+						}
+					},
+					error: function (data) { // Handle errors if any
+							alert('Error submitting the form.');
+					}
+				});
+			});
+
+			// Scripts for autocomplete options in input fields
+			setAutocompleteForDocument (document_type);
+		});
+
+</script>
+</body>
+</html>
+
+ 

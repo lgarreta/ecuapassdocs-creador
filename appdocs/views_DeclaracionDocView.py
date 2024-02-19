@@ -16,10 +16,13 @@ from .models import Vehiculo, Conductor
 #-- Vista para manejar las solicitudes de declaracion
 #--------------------------------------------------------------------
 class DeclaracionDocView (EcuapassDocView):
-	template_name = "declaracion-forma.html"
+	document_type    = "declaracion"
+	template_name    = "doc_forma_declaracion.html"
+	background_image = "appdocs/images/image-declaracion-vacia-NTA.png"
+	parameters_file  = "declaracion_input_parameters.json"
 
 	def __init__(self, *args, **kwargs):
-		super().__init__ ("declaracion", "declaracion-forma.html", "declaracion_input_parameters.json", *args, **kwargs)
+		super().__init__ (self.document_type, self.template_name, self.background_image, self.parameters_file, *args, **kwargs)
 
 #--------------------------------------------------------------------
 #-- Class for autocomplete options while the user is typing

@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.contrib.messages import get_messages, constants # For messages to user 
+from django.contrib import messages
 
 # For CSRF protection
 from django.utils.decorators import method_decorator
@@ -30,42 +30,48 @@ from appusuarios.models import UsuarioEcuapass
 #--------------------------------------------------------------------
 #-- Vista para manejar las solicitudes de manifiesto
 #--------------------------------------------------------------------
-class EcuapassDocView(LoginRequiredMixin, View):
+class EcuapassDocView (LoginRequiredMixin, View):
 
-	def __init__(self, docType, templateName, parametersFile, *args, **kwargs):
+	def __init__(self, document_type, template_name, background_image, parameters_file, 
+	             inputParameters, *args, **kwargs):
 		super().__init__ (*args, **kwargs)
-		self.docType        = docType
-		self.templateName   = templateName
-		self.parametersFile = parametersFile
+		self.document_type	  = document_type
+		self.template_name	  = template_name
+		self.background_image = background_image
+		self.parameters_file  = parameters_file
+		self.inputParameters  = inputParameters
 
 	#-------------------------------------------------------------------
 	# Usado para llenar una forma (manifiesto) vacia
 	# Envía los parámetros o restricciones para cada campo en la forma de HTML
 	#-------------------------------------------------------------------
 	def get (self, request, *args, **kwargs):
+		self.setInitialValuesToInputs (request)
+
 		# Check if user has reached his total number of documents
-		if self.limiteDocumentosAsignados (request.user, self.docType):
-			message = constants.ERROR
-			get_messages (request).add (message, "Límite de documents alcanzado. No puede crear documentos.")
-			return render(request, 'messages.html')
-			
+		if self.limiteDocumentosAsignados (request.user, self.document_type):
+			text = "Límite de documents alcanzado. No puede crear documentos."
+			messages.add_message (request, messages.ERROR, text)
+			return render (request, 'messages.html')
 			
 		# If edit, retrieve the additional parameter from kwargs
 		pk = kwargs.get ('pk')
 
 		# Load parameters from package
-		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
-		print ("-- parametersFile --", self.parametersFile)
+		# inputParameters = ResourceLoader.loadJson ("docs", self.parameters_file)
 		if pk:
-			inputParameters = self.setValuesToInputs (pk, inputParameters)
+			self.setSavedValuesToInputs (pk)
 			
 		# Set "codigo pais" ("CO", "EC") from URL pattern ("exportacion" or "importacion")
 		# Values is set into "txt0a" key of inputParameters (Valid for NTA and BYZA)
-		inputParameters = self.getCodigoPaisFromURL (request, inputParameters)
+		#self.inputParameters = self.getCodigoPaisFromURL (request, self.inputParameters)
 
 		# Send input fields parameters (bounds, maxLines, maxChars, ...)
-		contextDic = {"input_parameters" : inputParameters}
-		return render (request, self.templateName, contextDic)
+		contextDic = {"document_type"	 : self.document_type, 
+					  "input_parameters" : self.inputParameters, 
+					  "background_image" : self.background_image
+					 }
+		return render (request, self.template_name, contextDic)
 
 	#-------------------------------------------------------------------
 	# Used to receive a filled manifiesto form and create a response
@@ -77,9 +83,9 @@ class EcuapassDocView(LoginRequiredMixin, View):
 		# Get values from html form
 		button_type = request.POST.get('boton_pdf', '').lower()
 
-		inputValues = self.getInputValuesFromForm (request)       # Values without CPI number
+		inputValues = self.getInputValuesFromForm (request)		  # Values without CPI number
 		fieldValues = self.getFieldValuesFromInputs (inputValues)
-		docNumber   = inputValues ["txt00"]
+		docNumber	= inputValues ["txt00"]
 
 		pdfFilename, pdfContent  = self.createPDF  (inputValues, button_type)
 
@@ -98,38 +104,43 @@ class EcuapassDocView(LoginRequiredMixin, View):
 				self.saveDocumentToDB (inputValues, fieldValues, request.user, "SAVE-DATA")
 				return pdf_response
 		elif "copia" in button_type:
-			if inputValues ["txt00"] != "": 	
+			if inputValues ["txt00"] != "":		
 				return pdf_response
 			else: 
 				response_data = {'message': "Error: No se ha creado documento original!" }
 				return JsonResponse(response_data, safe=False)
 		elif "clonar" in button_type:
-			response_data      = {'numero': "CLON"}
+			response_data	   = {'numero': "CLON"}
 			return JsonResponse (response_data, safe=False)
 		else:
 			print (">>> Error: No se conoce opción del botón presionado:", button_type)
 
 	#-------------------------------------------------------------------
+	#-- Set constant values for the BYZA company
+	#-------------------------------------------------------------------
+	def setInitialValuesToInputs (self, request):
+		print ("--Initializing general values--")
+		# Importacion/Exportacion code for BYZA
+		self.inputParameters ["txt0a"]["value"] = self.getCodigoPaisFromURL (request)
+
+	#-------------------------------------------------------------------
 	#-- Get or set codigo pais: CO : importacion or EC : exportacion 
 	#-------------------------------------------------------------------
-	def getCodigoPaisFromURL (self, request, inputParameters):
+	def getCodigoPaisFromURL (self, request):
 		# Try to get previous
-		codigoPais = inputParameters ["txt0a"]["value"]
-		if codigoPais in ["CO", "EC"]:
-			return inputParameters
-		else:
+		codigoPais = self.inputParameters ["txt0a"]["value"]
+
+		if not codigoPais:
 			urlName = resolve(request.path_info).url_name
-			
 			if "importacion" in urlName:
-				inputParameters ["txt0a"]["value"] = "CO" 
+				codigoPais = "CO" 
 			elif "exportacion" in urlName:
-				inputParameters ["txt0a"]["value"] = "EC" 
+				codigoPais = "EC" 
 			else:
 				print (f"Alerta: No se pudo determinar código pais desde el URL: '{urlName}'")
-				inputParameters ["txt0a"]["value"] = "" 
+				codigoPais = "" 
 
-		return inputParameters
-
+		return codigoPais
 			
 	#-------------------------------------------------------------------
 	#-- Return a dic with the texts from the document form (e.g. txt00,)
@@ -151,10 +162,10 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	def getFieldValuesFromInputs (self, inputValues):
 		jsonFieldsDic = {}
 		# Load parameters from package
-		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
+		inputParameters = ResourceLoader.loadJson ("docs", self.parameters_file)
 		for key, params in inputParameters.items():
-			fieldName    = params ["field"]
-			value        = inputValues [key]
+			fieldName	 = params ["field"]
+			value		 = inputValues [key]
 			jsonFieldsDic [fieldName] = {"value": value, "content": value}
 
 		return jsonFieldsDic
@@ -162,27 +173,27 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	#-- Set saved or default values to inputs
 	#-------------------------------------------------------------------
-	def setValuesToInputs (self, recordId, inputParameters):
+	def setSavedValuesToInputs (self, recordId):
 		docRecord = None
-		if (self.docType == "cartaporte"):
+		if (self.document_type == "cartaporte"):
 			docRecord = CartaporteDoc.objects.get (id=recordId)
-		elif (self.docType == "manifiesto"):
+		elif (self.document_type == "manifiesto"):
 			docRecord = ManifiestoDoc.objects.get (id=recordId)
 		else:
-			print (f"Error: Tipo de documento '{docType}' no soportado")
+			print (f"Error: Tipo de documento '{document_type}' no soportado")
 			sys.exit (0)
 
 		# Iterating over fields
-		for field in docRecord._meta.fields [2:]:   # Not include "numero" and "id"
+		for field in docRecord._meta.fields [2:]:	# Not include "numero" and "id"
 			value = getattr(docRecord, field.name)
-			inputParameters [field.name]["value"] = value if value else ""
+			self.inputParameters [field.name]["value"] = value if value else ""
 
-		return inputParameters
+		return self.inputParameters
 	#-------------------------------------------------------------------
 	#-- Create a PDF from document
 	#-------------------------------------------------------------------
 	def createPDF (self, inputValues, button_type):
-		creadorPDF = CreadorPDF (self.docType)
+		creadorPDF = CreadorPDF (self.document_type)
 
 		outPdfPath, outJsonPath = creadorPDF.createPdfDocument (inputValues, button_type)
 
@@ -197,14 +208,14 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	def saveDocumentToDB (self, inputValues, fieldValues, username, flagSave):
 		docClass, modelClass = None, None
-		if self.docType == "cartaporte":
+		if self.document_type == "cartaporte":
 			docClass, modelClass = CartaporteDoc, Cartaporte
-		elif self.docType == "manifiesto":
+		elif self.document_type == "manifiesto":
 			docClass, modelClass = ManifiestoDoc, Manifiesto
-		elif self.docType == "declaracion":
+		elif self.document_type == "declaracion":
 			docClass, modelClass = DeclaracionDoc, Declaracion 
 		else:
-			print (f"Error: Tipo de documento '{docType}' no soportado")
+			print (f"Error: Tipo de documento '{document_type}' no soportado")
 			sys.exit (0)
 			
 		# Create documentDoc and save it to get id
@@ -214,11 +225,10 @@ class EcuapassDocView(LoginRequiredMixin, View):
 			documentDoc.save ()
 			documentDoc.numero = self.getDocumentNumber (inputValues, documentDoc.id)
 			documentDoc.save ()
-			self.actualizarNroDocumentosCreados (username, self.docType)
+			self.actualizarNroDocumentosCreados (username, self.document_type)
 
-			# Save Cartaporte register
-			documentModel = modelClass (id=documentDoc.id)
-			documentModel.setValues (documentDoc, fieldValues)
+			# Save Initial Cartaporte register
+			documentModel = modelClass (id=documentDoc.id, numero=documentDoc.numero)
 			documentModel.save ()
 
 			return documentDoc.numero
@@ -244,22 +254,22 @@ class EcuapassDocView(LoginRequiredMixin, View):
 	# Handle assigned documents for "externo" user profile
 	#-------------------------------------------------------------------
 	#-- Return if user has reached his max number of asigned documents
-	def limiteDocumentosAsignados (self, username, docType):
+	def limiteDocumentosAsignados (self, username, document_type):
 		user = get_object_or_404 (UsuarioEcuapass, username=username)
-		print (f">>> User: '{username}'. '{docType}'.  Creados: {user.nro_docs_creados}. Asignados: {user.nro_docs_asignados}")
+		print (f">>> User: '{username}'. '{document_type}'.  Creados: {user.nro_docs_creados}. Asignados: {user.nro_docs_asignados}")
 		
-		if (user.perfil == "externo" and user.nro_docs_creados  >= user.nro_docs_asignados):
+		if (user.perfil == "externo" and user.nro_docs_creados	>= user.nro_docs_asignados):
 			return True
 
 		return False
 
 	#-- Only for "cartaportes". Retrieve the object from the DB, increment docs, and save
-	def actualizarNroDocumentosCreados (self, username, docType):
-		if (docType != "cartaporte"):
+	def actualizarNroDocumentosCreados (self, username, document_type):
+		if (document_type != "cartaporte"):
 			return
 
 		user = get_object_or_404 (UsuarioEcuapass, username=username)
-		user.nro_docs_creados += 1  # or any other value you want to increment by
+		user.nro_docs_creados += 1	# or any other value you want to increment by
 		user.save()		
 	#-------------------------------------------------------------------
 	#-- Create a formated document number ranging from 2000000 

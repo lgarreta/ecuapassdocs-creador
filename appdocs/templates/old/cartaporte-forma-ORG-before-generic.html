@@ -23,7 +23,7 @@
 	<title>Carta de Porte</title>
 
     <style>
-        body 
+        body {
             /* Add any other styles you need for your body */
             margin: 0;
             padding: 0;
@@ -106,50 +106,11 @@
 		  white-space: pre-line; /* Wrap and preserve line breaks */
 		}
 
-    	/* Establece las coordenadas (X, Y) y el ancho y alto de los campos de texto */
-		/*
-		#txt00 { position: absolute; left: 797px; top: 82px; width: 233px; height: 28px; }
-		#txt01 { position: absolute; left: 40px; top: 162px; width: 501px; height: 103px; }
-		#txt02 { position: absolute; left: 40px; top: 302px; width: 501px; height: 63px; }
-		#txt03 { position: absolute; left: 40px; top: 397px; width: 501px; height: 58px; }
-		#txt04 { position: absolute; left: 40px; top: 492px; width: 501px; height: 78px; }
-		#txt05 { position: absolute; left: 555px; top: 142px; width: 501px; height: 58px; }
-		#txt06 { position: absolute; left: 555px; top: 232px; width: 501px; height: 33px; }
-		#txt07 { position: absolute; left: 555px; top: 302px; width: 501px; height: 63px; }
-		#txt08 { position: absolute; left: 555px; top: 397px; width: 501px; height: 58px; }
-		#txt09 { position: absolute; left: 555px; top: 492px; width: 501px; height: 78px; }
-		#txt10 { position: absolute; left: 40px; top: 647px; width: 93px; height: 289px; }
-		#txt11 { position: absolute; left: 147px; top: 647px; width: 103px; height: 289px; }
-		#txt12 { position: absolute; left: 265px; top: 647px; width: 513px; height: 289px; }
-		#txt13_1 { position: absolute; left: 797px; top: 677px; width: 121px; height: 13px; }
-		#txt13_2 { position: absolute; left: 935px; top: 677px; width: 121px; height: 13px; }
-		#txt14 { position: absolute; left: 797px; top: 777px; width: 121px; height: 13px; }
-		#txt15 { position: absolute; left: 935px; top: 777px; width: 121px; height: 13px; }
-		#txt16 { position: absolute; left: 795px; top: 869px; width: 263px; height: 67px; }
-		#txt17_11 { position: absolute; left: 112px; top: 997px; width: 114px; height: 11px; }
-		#txt17_12 { position: absolute; left: 112px; top: 1018px; width: 114px; height: 11px; }
-		#txt17_13 { position: absolute; left: 112px; top: 1038px; width: 114px; height: 11px; }
-		#txt17_14 { position: absolute; left: 112px; top: 1059px; width: 114px; height: 11px; }
-		#txt17_21 { position: absolute; left: 240px; top: 997px; width: 80px; height: 11px; }
-		#txt17_22 { position: absolute; left: 240px; top: 1018px; width: 80px; height: 11px; }
-		#txt17_23 { position: absolute; left: 240px; top: 1038px; width: 80px; height: 11px; }
-		#txt17_24 { position: absolute; left: 240px; top: 1059px; width: 80px; height: 11px; }
-		#txt17_31 { position: absolute; left: 334px; top: 997px; width: 100px; height: 11px; }
-		#txt17_32 { position: absolute; left: 334px; top: 1018px; width: 100px; height: 11px; }
-		#txt17_33 { position: absolute; left: 334px; top: 1038px; width: 100px; height: 11px; }
-		#txt17_34 { position: absolute; left: 334px; top: 1059px; width: 100px; height: 11px; }
-		#txt17_41 { position: absolute; left: 447px; top: 997px; width: 94px; height: 11px; }
-		#txt17_42 { position: absolute; left: 447px; top: 1018px; width: 94px; height: 11px; }
-		#txt17_43 { position: absolute; left: 447px; top: 1038px; width: 94px; height: 11px; }
-		#txt17_44 { position: absolute; left: 447px; top: 1059px; width: 94px; height: 11px; }
-		#txt18 { position: absolute; left: 40px; top: 1103px; width: 503px; height: 32px; }
-		#txt19 { position: absolute; left: 40px; top: 1171px; width: 503px; height: 40px; }
-		#txt20 { position: absolute; left: 40px; top: 1247px; width: 503px; height: 96px; }
-		#txt21 { position: absolute; left: 555px; top: 975px; width: 503px; height: 95px; }
-		#txt22 { position: absolute; left: 555px; top: 1103px; width: 503px; height: 108px; }
-		#txt23 { position: absolute; left: 555px; top: 1333px; width: 503px; height: 10px; }
-		#txt24 { position: absolute; left: 477px; top: 1357px; width: 173px; height: 23px; }
-		*/
+		/*****************************************************************************/
+		/*****************************************************************************/
+    	/*** Establece dinamicamente coordenadas X, Y, ancho, alto de los inputsi ****/
+		/*****************************************************************************/
+		/*****************************************************************************/
 
     </style>
 		<!-- For PDF -->
@@ -171,66 +132,6 @@
 				<!--------------------------------------------------------------->
 				<!------------- Input fields added dynamically ------------------>
 				<!--------------------------------------------------------------->
-				<!--
-				<textarea name="txt00" id="txt00" class="input_numero" readonly>PRELIMINAR</textarea>
-				<textarea name="txt01" id="txt01" class="input_numero" hidden></textarea>
-				<!-- input_empresa: 02, 03, 04, 05: Nombre, dir, pais, rut 
-				<textarea name="txt02" id="txt02" class="input_empresa"></textarea>
-				<textarea name="txt03" id="txt03" class="input_empresa"></textarea>
-				<textarea name="txt04" id="txt04" class="input_empresa"></textarea>
-				<textarea name="txt05" id="txt05" class="input_empresa"></textarea>
-				<!-- input_lugar: 06, 07, 08: Ciudad, Pais, Fecha 
-				<textarea name="txt06" id="txt06" class="input_lugar"></textarea>
-				<textarea name="txt07" id="txt07" class="input_lugar"></textarea>
-				<textarea name="txt08" id="txt08" class="input_lugar"></textarea>
-
-				<textarea name="txt09" id="txt09" class="input_condiciones"></textarea>
-
-				<!-- input_bultos: 10, 11, 12: Cantidad, Marca, Descripcion 
-				<textarea name="txt10" id="txt10" class="input_bultos"></textarea>
-				<textarea name="txt11" id="txt11" class="input_bultos"></textarea>
-				<textarea name="txt12" id="txt12" class="input_descripcion"></textarea>
-
-				<!-- input_valor: 13_1, 13_2, 14, 15: Peso, volumen, medidas 
-				<textarea name="txt13_1" id="txt13_1" class="input_valor"></textarea>
-				<textarea name="txt13_2" id="txt13_2" class="input_valor"></textarea>
-				<textarea name="txt14" id="txt14" class="input_valor"></textarea>
-				<textarea name="txt15" id="txt15" class="input_valor"></textarea>
-
-				<!-- input_incoterm 
-				<textarea name="txt16" id="txt16" class="input_incoterm"></textarea>
-
-				<!-- input_valor 
-				<textarea name="txt17_11" id="txt17_11" class="input_valor"></textarea>
-				<textarea name="txt17_12" id="txt17_12" class="input_valor"></textarea>
-				<textarea name="txt17_13" id="txt17_13" class="input_valor"></textarea>
-				<textarea name="txt17_14" id="txt17_14" class="input_valor"></textarea>
-				<textarea name="txt17_21" id="txt17_21" class="input_general"></textarea>
-				<textarea name="txt17_22" id="txt17_22" class="input_general"></textarea>
-				<textarea name="txt17_23" id="txt17_23" class="input_general"></textarea>
-				<textarea name="txt17_24" id="txt17_24" class="input_general"></textarea>
-				<textarea name="txt17_31" id="txt17_31" class="input_valor"></textarea>
-				<textarea name="txt17_32" id="txt17_32" class="input_valor"></textarea>
-				<textarea name="txt17_33" id="txt17_33" class="input_valor"></textarea>
-				<textarea name="txt17_34" id="txt17_34" class="input_valor"></textarea>
-				<textarea name="txt17_41" id="txt17_41" class="input_general"></textarea>
-				<textarea name="txt17_42" id="txt17_42" class="input_general"></textarea>
-				<textarea name="txt17_43" id="txt17_43" class="input_general"></textarea>
-				<textarea name="txt17_44" id="txt17_44" class="input_general"></textarea>
-
-				<!-- Documentos, Emision, Representante, Instrucciones, Observaciones,
-				Transportista 
-				<textarea name="txt18" id="txt18" class="input_documento"></textarea>
-
-				<textarea name="txt19" id="txt19" class="input_lugar"></textarea>
-				<textarea name="txt20" id="txt20" class="input_general"></textarea>
-				<textarea name="txt21" id="txt21" class="input_general"></textarea>
-				<textarea name="txt22" id="txt22" class="input_general"></textarea>
-				<textarea name="txt23" id="txt23" class="input_general"></textarea>
-				
-				<!-- Tipo: Original o Copia 
-				<textarea name="txt24" id="txt24" class="input_tipo"></textarea>
-
 				<!-- Add other input fields as needed -->
     			<input type="hidden" name="boton_pdf" id="boton_pdf" value="">
 			</div>
