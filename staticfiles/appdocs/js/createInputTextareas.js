@@ -23,12 +23,6 @@ function createInputTextareas (inputsParameters, inputsContainer) {
 			});
 		}
 
-		// Set onBlur to listen when user leaves out a textarea
-		textarea.addEventListener ('blur', function (event) {
-			//id = this.id
-			console.log ("--id:")
-		}
-
 		inputsContainer.appendChild (textarea);
 		textAreas.push (textarea);
 	});

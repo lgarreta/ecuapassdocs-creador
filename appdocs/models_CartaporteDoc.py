@@ -91,7 +91,7 @@ class Cartaporte (models.Model):
 		return reverse('cartaporte-detail', args=[str(self.id)])
 
 	def __str__ (self):
-		return f"{self.id}, {self.numero} {self.remitente}"
+		return f"{self.numero}, {self.fecha_emision}"
 
 	def setValues (self, cartaporteDoc, fieldValues):
 		self.numero     = cartaporteDoc.numero

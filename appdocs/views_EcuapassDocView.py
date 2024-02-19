@@ -119,7 +119,6 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-- Set constant values for the BYZA company
 	#-------------------------------------------------------------------
 	def setInitialValuesToInputs (self, request):
-		print ("--Initializing general values--")
 		# Importacion/Exportacion code for BYZA
 		self.inputParameters ["txt0a"]["value"] = self.getCodigoPaisFromURL (request)
 

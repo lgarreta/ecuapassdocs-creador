@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.views import View
+from django.views import generic
 
-#from .models_CartaporteDoc import Empresa, Cartaporte, CartaporteDoc
-#from .models_ManifiestoDoc import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .models_CartaporteDoc import Cartaporte, CartaporteDoc
 from .models_ManifiestoDoc import Manifiesto, ManifiestoDoc
@@ -36,7 +41,9 @@ def index(request):
 				 },
 	)
 
-from django.views import generic
+# Decorador personalizado para requerir autenticación en una vista basada en clase
+def login_required_class(view_func):
+	return method_decorator(login_required, name='dispatch')(view_func)
 
 #--------------------------------------------------------------------
 #-- Empresa
@@ -47,6 +54,19 @@ class EmpresaListView(generic.ListView):
 class EmpresaDetailView(generic.DetailView):
 	model = Empresa
 	
+class EmpresaCreate(login_required_class(CreateView)):
+	model = Empresa
+	fields = '__all__'
+
+class EmpresaUpdate(login_required_class(UpdateView)):
+	model = Empresa
+	fields = ['tipoId','nombre','direccion','ciudad', 'pais']
+
+class EmpresaDelete(login_required_class(DeleteView)):
+	model = Empresa
+	success_url = reverse_lazy('empresas')
+
+
 #--------------------------------------------------------------------
 #-- Vehiculo
 #--------------------------------------------------------------------
@@ -61,32 +81,6 @@ class ManifiestoListView(generic.ListView):
 
 class ManifiestoDetailView(generic.DetailView):
 	model = Manifiesto
-
-# Decorador personalizado para requerir autenticación en una vista basada en clase
-def login_required_class(view_func):
-	return method_decorator(login_required, name='dispatch')(view_func)
-
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
-
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-
-#--------------------------------------------------------------------
-#-- Empresa
-#--------------------------------------------------------------------
-class EmpresaCreate(login_required_class(CreateView)):
-	model = Empresa
-	fields = '__all__'
-
-class EmpresaUpdate(login_required_class(UpdateView)):
-	model = Empresa
-	fields = ['tipoId','nombre','direccion','ciudad', 'pais']
-
-class EmpresaDelete(login_required_class(DeleteView)):
-	model = Empresa
-	success_url = reverse_lazy('empresas')
-
 
 #--------------------------------------------------------------------
 #-- Vehiculo
@@ -170,7 +164,6 @@ class ManifiestoDelete(login_required_class(DeleteView)):
 	success_url = reverse_lazy('manifiestos')
 
 
-from django.views import View
 
 class InfoView(View):
 	template_name = 'info_view.html'

@@ -37,7 +37,6 @@ class ManifiestoDocView (EcuapassDocView):
 
 	#-- Set constant values for the BYZA company
 	def setInitialValuesToInputs (self, request):
-		print ("--Initializing manifiesto values--")
 		super ().setInitialValuesToInputs (request)
 
 		# Permisos values for BYZA 

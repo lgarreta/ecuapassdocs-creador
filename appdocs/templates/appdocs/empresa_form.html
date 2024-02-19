@@ -1,13 +1,17 @@
-{% extends "base_generic.html" %}
+{% extends "base_usuarios.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-<form action="" method="post">
-    {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
-    <input type="submit" value="Guardar" />
-</form>
+<div class="container"> 
+	<h2>Creación de Empresa</h2>
+		<form action="" method="post">
+			{% csrf_token %}
+			{{ form|crispy }}
+			</br>
+			<button type="submit" class="btn btn-primary">Guardar</button>
+			<a href="{% url 'listar' %}" class="btn btn-secondary">Cancelar</a>
+		</form>
+</div>
 
 {% endblock %}

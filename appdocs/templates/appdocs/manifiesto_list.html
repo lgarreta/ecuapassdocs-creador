@@ -8,7 +8,7 @@
 
       {% for manifiesto in manifiesto_list %}
       <li>
-        <a href="{{ manifiesto.get_absolute_url }}">{{ manifiesto.numero }}</a> ({{manifiesto.vehiculo}})
+        <a href="{{ manifiesto.get_absolute_url }}">{{ manifiesto.numero }}</a> ({{manifiesto.fecha_emision}})
       </li>
       {% endfor %}
 
