@@ -1,0 +1,471 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- For autocomplete: Include necessary CSS and JS files, e.g., jQuery UI -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+	<title>Creador de Cartas de Porte</title>
+
+    <style>
+        body 
+            /* Add any other styles you need for your body */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Evita las barras de desplazamiento del cuerpo del documento */
+        }
+
+        #container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: visible; 
+        }
+
+        .container {
+            position: absolute;
+            left: 00px; 
+            top: 00px; 
+            width: 1100px; 
+            height: 1424px; 
+
+            background: rgba(55, 55, 255, 0.2); 
+            padding: 00px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 1.0); 
+        }
+
+        #background {
+            background-image: url('{% static "ecudocs/images/image-manifiesto-vacio-NTA.png" %}');
+            #background-size: 1699px 2200px; /* Tamaño fijo de la imagen de fondo */
+            #background-size: cover; /* Adjust as needed */
+            background-repeat: no-repeat;
+            width: 1100px; /* Ancho fijo de la imagen de fondo */
+            height: 1424px; /* Alto fijo de la imagen de fondo */
+        }
+
+
+		/* Style for the form header (containing the pdf-clonar button) */
+		.form-header {
+		  text-align: center;
+		  margin-bottom: 10px;
+		}
+
+		.top-panel {
+		  background-color: #fff0ff;
+		  padding: 03px;
+		  text-align: center;
+		}
+
+		form {
+		  display: flex;
+		  flex-direction: column; /* Align items in a column */
+		  align-items: center;
+		  padding: 10px;
+		}		
+
+		#pdf_preliminar_btn {
+		  background-color: #7CFC00;
+		  color: black;
+		}
+
+		#pdf_original_btn {
+		  background-color: #FFFF00;
+		  color: black;
+		}
+
+		#pdf_copia_btn {
+		  background-color: #F0FFFF;
+		  color: black;
+		}
+
+		#pdf_clonar_btn {
+		  background-color: #ADD8E6;
+		  color: black;
+		}		
+
+		textarea {
+		  resize: none; /* "none" disables resizing */
+		  overflow: hidden ; /* Disable scrolling */
+		  white-space: pre-line; /* Wrap and preserve line breaks */
+		}
+
+    	/* Establece las coordenadas (X, Y) y el ancho y alto de los campos de texto */
+		
+		#txt00 { position: absolute; left: 847px; top: 87px; width: 203px; height: 28px; }
+		#txt01 { position: absolute; left: 52px; top: 172px; width: 503px; height: 150px; }
+		#txt02 { position: absolute; left: 572px; top: 172px; width: 485px; height: 58px; }
+		#txt03 { position: absolute; left: 572px; top: 264px; width: 485px; height: 58px; }
+		#txt04 { position: absolute; left: 52px; top: 369px; width: 251px; height: 21px; }
+		#txt05 { position: absolute; left: 316px; top: 369px; width: 135px; height: 21px; }
+		#txt06 { position: absolute; left: 463px; top: 369px; width: 279px; height: 21px; }
+		#txt07 { position: absolute; left: 753px; top: 369px; width: 304px; height: 21px; }
+		#txt08 { position: absolute; left: 267px; top: 402px; width: 790px; height: 13px; }
+		#txt09 { position: absolute; left: 52px; top: 462px; width: 251px; height: 21px; }
+		#txt10 { position: absolute; left: 316px; top: 462px; width: 135px; height: 21px; }
+		#txt11 { position: absolute; left: 464px; top: 462px; width: 277px; height: 21px; }
+		#txt12 { position: absolute; left: 754px; top: 462px; width: 303px; height: 21px; }
+		#txt13 { position: absolute; left: 52px; top: 526px; width: 470px; height: 15px; }
+		#txt14 { position: absolute; left: 52px; top: 571px; width: 210px; height: 15px; }
+		#txt15 { position: absolute; left: 276px; top: 571px; width: 247px; height: 15px; }
+		#txt16 { position: absolute; left: 52px; top: 615px; width: 210px; height: 15px; }
+		#txt17 { position: absolute; left: 277px; top: 615px; width: 245px; height: 15px; }
+		#txt18 { position: absolute; left: 535px; top: 526px; width: 522px; height: 15px; }
+		#txt19 { position: absolute; left: 535px; top: 571px; width: 252px; height: 15px; }
+		#txt20 { position: absolute; left: 800px; top: 571px; width: 257px; height: 15px; }
+		#txt21 { position: absolute; left: 535px; top: 615px; width: 252px; height: 15px; }
+		#txt22 { position: absolute; left: 800px; top: 615px; width: 257px; height: 15px; }
+		#txt23 { position: absolute; left: 52px; top: 676px; width: 470px; height: 15px; }
+		#txt24 { position: absolute; left: 535px; top: 676px; width: 522px; height: 15px; }
+		#txt25_1 { position: absolute; left: 152px; top: 722px; width: 18px; height: 15px; }
+		#txt25_2 { position: absolute; left: 432px; top: 722px; width: 18px; height: 15px; }
+		#txt25_3 { position: absolute; left: 575px; top: 722px; width: 18px; height: 15px; }
+		#txt25_4 { position: absolute; left: 700px; top: 722px; width: 18px; height: 15px; }
+		#txt25_5 { position: absolute; left: 799px; top: 707px; width: 258px; height: 48px; }
+		#txt26 { position: absolute; left: 52px; top: 798px; width: 470px; height: 15px; }
+		#txt27 { position: absolute; left: 535px; top: 798px; width: 522px; height: 15px; }
+		#txt28 { position: absolute; left: 52px; top: 857px; width: 103px; height: 341px; }
+		#txt29 { position: absolute; left: 167px; top: 857px; width: 357px; height: 341px; }
+		#txt30 { position: absolute; left: 535px; top: 857px; width: 105px; height: 341px; }
+		#txt31 { position: absolute; left: 651px; top: 857px; width: 130px; height: 341px; }
+		#txt32_1 { position: absolute; left: 795px; top: 857px; width: 78px; height: 341px; }
+		#txt32_2 { position: absolute; left: 795px; top: 1213px; width: 78px; height: 23px; }
+		#txt32_3 { position: absolute; left: 887px; top: 857px; width: 78px; height: 341px; }
+		#txt32_4 { position: absolute; left: 887px; top: 1213px; width: 78px; height: 23px; }
+		#txt33_1 { position: absolute; left: 979px; top: 857px; width: 78px; height: 341px; }
+		#txt33_2 { position: absolute; left: 979px; top: 1213px; width: 78px; height: 23px; }
+		#txt34 { position: absolute; left: 52px; top: 1227px; width: 653px; height: 10px; }
+		#txt35 { position: absolute; left: 52px; top: 1265px; width: 470px; height: 25px; }
+		#txt36 { position: absolute; left: 52px; top: 1323px; width: 470px; height: 33px; }
+		#txt37 { position: absolute; left: 535px; top: 1265px; width: 253px; height: 13px; }
+		#txt38 { position: absolute; left: 800px; top: 1265px; width: 257px; height: 13px; }
+		#txt39 { position: absolute; left: 535px; top: 1317px; width: 522px; height: 47px; }
+		#txt40 { position: absolute; left: 176px; top: 1366px; width: 346px; height: 13px; }
+
+		#txt41 { position: absolute; left: 477px; top: 1390px; width: 173px; height: 23px; }
+
+    </style>
+		<!-- For PDF -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+<body>
+	<div id="background"></div>
+		<form action="{% url 'ecudocs:manifiesto' %}" method="post" id="forma_pdf" target="_blank">
+			<div class="container">
+				{% csrf_token %}
+				<!-- Panel superior que muestra cuatro opciones para realizar con el documento -->
+				<div class="top-panel">
+					<button type="submit" id="pdf_preliminar_btn" name="action" value="preliminar">PDF preliminar</button>
+					<button type="submit" id="pdf_original_btn"  name="action" value="original">PDF original</button>
+					<button type="submit" id="pdf_copia_btn" name="action" value="copia">PDF copia</button>
+					<button type="submit" id="pdf_clonar_btn" name="action" value="clonar">Clonar</button>
+				</div>
+				<!--------------------------------------------------------------->
+				<!----------------------- Input fields -------------------------->
+				<!--------------------------------------------------------------->
+				<textarea name="txt00" id="txt00" class="input_numero" readonly>PRELIMINAR</textarea>
+				<textarea name="txt01" id="txt01" class="input_numero" hidden></textarea>
+				<textarea name="txt02" id="txt02" class="input_permiso"></textarea>
+				<textarea name="txt03" id="txt03" class="input_permiso"></textarea>
+				<textarea name="txt04" id="txt04" class="input_general"></textarea>
+				<textarea name="txt05" id="txt05" class="input_fecha"></textarea>
+				<textarea name="txt06" id="txt06" class="input_placaPais"></textarea>
+				<textarea name="txt07" id="txt07" class="input_general"></textarea>
+				<textarea name="txt08" id="txt08" class="input_certificado"></textarea>
+				<textarea name="txt09" id="txt09" class="input_general"></textarea>
+				<textarea name="txt10" id="txt10" class="input_general"></textarea>
+				<textarea name="txt11" id="txt11" class="input_placaPais"></textarea>
+				<textarea name="txt12" id="txt12" class="input_general"></textarea>
+				<textarea name="txt13" id="txt13" class="input_conductor"></textarea>
+				<textarea name="txt14" id="txt14" class="input_general"></textarea>
+				<textarea name="txt15" id="txt15" class="input_general"></textarea>
+				<textarea name="txt16" id="txt16" class="input_general"></textarea>
+				<textarea name="txt17" id="txt17" class="input_general"></textarea>
+				<textarea name="txt18" id="txt18" class="input_conductor"></textarea>
+				<textarea name="txt19" id="txt19" class="input_general"></textarea>
+				<textarea name="txt20" id="txt20" class="input_general"></textarea>
+				<textarea name="txt21" id="txt21" class="input_general"></textarea>
+				<textarea name="txt22" id="txt22" class="input_general"></textarea>
+				<textarea name="txt23" id="txt23" class="input_lugar"></textarea>
+				<textarea name="txt24" id="txt24" class="input_lugar"></textarea>
+				<textarea name="txt25_1" id="txt25_1" class="input_tipocarga"></textarea>
+				<textarea name="txt25_2" id="txt25_2" class="input_tipocarga"></textarea>
+				<textarea name="txt25_3" id="txt25_3" class="input_tipocarga"></textarea>
+				<textarea name="txt25_4" id="txt25_4" class="input_tipocarga"></textarea>
+				<textarea name="txt25_5" id="txt25_5" class="input_general"></textarea>
+				<textarea name="txt26" id="txt26" class="input_general"></textarea>
+				<textarea name="txt27" id="txt27" class="input_general"></textarea>
+				<textarea name="txt28" id="txt28" class="input_general"></textarea>
+				<textarea name="txt29" id="txt29" class="input_general"></textarea>
+				<textarea name="txt30" id="txt30" class="input_general"></textarea>
+				<textarea name="txt31" id="txt31" class="input_general"></textarea>
+				<textarea name="txt32_1" id="txt32_1" class="input_valor"></textarea>
+				<textarea name="txt32_2" id="txt32_2" class="input_valor"></textarea>
+				<textarea name="txt32_3" id="txt32_3" class="input_valor"></textarea>
+				<textarea name="txt32_4" id="txt32_4" class="input_valor"></textarea>
+				<textarea name="txt33_1" id="txt33_1" class="input_valor"></textarea>
+				<textarea name="txt33_2" id="txt33_2" class="input_valor"></textarea>
+				<textarea name="txt34" id="txt34" class="input_incoterm"></textarea>
+				<textarea name="txt35" id="txt35" class="input_general"></textarea>
+				<textarea name="txt36" id="txt36" class="input_general"></textarea>
+				<textarea name="txt37" id="txt37" class="input_general"></textarea>
+				<textarea name="txt38" id="txt38" class="input_general"></textarea>
+				<textarea name="txt39" id="txt39" class="input_general"></textarea>
+				<textarea name="txt40" id="txt40" class="input_fecha"></textarea>
+
+				<!-- Tipo: Original o Copia -->
+				<textarea name="txt41" id="txt41" class="input_tipo"></textarea>
+
+				<!-------------------------------------------------------------->
+				<!-- Add other input fields as needed -------------------------->
+				<!-------------------------------------------------------------->
+    			<input type="hidden" name="boton_pdf" id="boton_pdf" value="">
+			</div>
+		</form>
+	</div>
+<script>
+		//-------------------------------------------------------------
+		// Get input parameters from server and apply to form inputs
+		//-------------------------------------------------------------
+		let inputsParameters = {{ input_parameters|safe }};
+
+		window.jsPDF = window.jspdf.jsPDF;
+		let pdf = new jsPDF();
+
+		let MAXLINES = "";
+		let MAXCHARS = "";
+		let FONTSIZE = "";
+		let textArea = "";
+		let text     = "";
+
+		// Set restrictions and styles for each input textarea
+		const textAreas = document.querySelectorAll ("textarea");
+		textAreas.forEach (function (textArea) {
+			const input = inputsParameters [textArea.id];
+			textArea.style.fontSize  = input["fontSize"];
+			textArea.style.textAlign = input["align"];
+			textArea.style.position = "absolute";
+			textArea.addEventListener ('input', handleInput);
+		});
+
+		// Control max number of lines and chars according to className
+		function handleInput (event) {
+			textArea = event.target;
+			convertToUpperCase (textArea);
+
+			MAXLINES = inputsParameters [textArea.id]["maxLines"];
+			MAXCHARS = inputsParameters [textArea.id]["maxChars"] * 3.2;
+
+			// Control maximum number of chars
+			lines = pdf.splitTextToSize (textArea.value, MAXCHARS);
+			textArea.value = lines.join("\n");
+
+			// Control maximum number of lines
+			text = textArea.value;
+			lines = text.split('\n'); 
+			if (lines.length > MAXLINES) 
+				textArea.value = lines.slice (0, MAXLINES).join('\n');
+		}
+
+		// Save the current cursor position
+		function convertToUpperCase (textArea) {
+			var start = textArea.selectionStart;
+			var end = textArea.selectionEnd;
+			// Convert the text to uppercase and set it back to the textArea
+			textArea.value = textArea.value.toUpperCase();
+			// Restore the cursor position
+			textArea.setSelectionRange(start, end);
+		}
+
+		//-------------------------------------------------------------
+		// For handling "preliminar", "original", "copia", and "clonar" options
+		// and getting preliminar document Id
+		//-------------------------------------------------------------
+		$(document).ready(function () {
+			$('#forma_pdf').submit(function (e) {
+				let formaPdf = this;
+				let submitterButton = e["originalEvent"]["submitter"]["id"];
+				document.getElementById('boton_pdf').value = submitterButton; 
+
+				e.preventDefault();  // Prevent the default form submission
+				var formData = $(this).serialize();
+
+				$.ajax({
+					type: 'POST',
+					url: $(this).attr('action'),
+					data: formData,
+
+					 beforeSend: function (xhr, settings) {
+					 	// Include the CSRF token in the request headers
+					 	xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+					 },
+
+					success: function (data) { // Handle the response from the server
+						let input = document.getElementById("txt00")
+						if (submitterButton.includes ("preliminar")){
+							formaPdf.submit ();
+						}else if (submitterButton.includes ("original")){
+							if (input.value == "" || input.value == "PRELIMINAR" || input.value == "CLON")
+								input.value = data ["numero"]
+							formaPdf.submit ();
+						}else if (submitterButton.includes ("copia")){
+							if (typeof data == "string")  // PDF content
+								formaPdf.submit ();
+							else {                        // Object content
+								alert ("Error: No se ha creado el documento original!")
+							}
+						}else if (submitterButton.includes ("clonar")){
+							input.value = data ["numero"]
+						}
+					},
+					error: function (data) { // Handle errors if any
+							alert('Error submitting the form.');
+					}
+				});
+			});
+
+			// Scripts for autocomplete options in input fields
+			let vehiculoInputs = getTextAreasByClassName ("input_placaPais")
+			vehiculoInputs.forEach (inputName => {
+				createAutocomplete(new AutoCompletePlacaPais (inputName)) 
+			});
+			let conductorInputs = getTextAreasByClassName ("input_conductor")
+			
+			conductorInputs.forEach (inputName => {
+				createAutocomplete(new AutoCompleteConductor (inputName)) 
+			});
+		});
+
+		// Create autocomplete for an entity
+		function createAutocomplete (entity) {
+			let inputSelector = entity.inputSelector
+			let sourceUrl     = entity.sourceUrl
+			
+			$(inputSelector).autocomplete({
+				source: function (request, response) {
+					$.ajax({ url: sourceUrl, dataType: 'json', data: { query: request.term},
+
+						beforeSend: function (xhr, settings) {
+							// Include the CSRF token in the request headers
+							xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+						},
+
+						success: function (data) {
+							responseData = entity.onAjaxSuccess (data)
+							response (responseData)
+						}
+					});
+				},
+				minLength: 2, 
+				select: function (event, ui) {
+					entity.onItemSelected (ui)
+					// Prevent the default behavior of filling the input with the selected value
+					return false;
+				}
+			});
+		}
+
+		// Autocomplete class for Vehiculo inputs
+		class AutoCompletePlacaPais {
+			constructor (inputSelector) {
+				let inputId        = "#" + inputSelector
+				this.inputSelector = inputSelector;
+				this.sourceUrl     = "opciones-vehiculo/"
+				this.fullData      = null;
+			}
+
+			// When ajax query is succesfull, set items
+			onAjaxSuccess (data) {
+				this.fullData = data;
+				let flatData = [];
+				for (let i=0; i < data.length; i++) {
+					flatData.push (data[i] ["itemLine"])
+				}
+				return flatData;
+			}
+
+			// When an item is selected, populate the textarea 
+			onItemSelected (ui) {
+				let index = ui.item.value.split (".")[0]
+				let text = this.fullData [index]["itemText"]
+				let values = text.split ("||");
+				let input = this.inputSelector
+				if (input.id === "txt06") {
+					document.getElementById("txt04").value = values [0]
+					document.getElementById("txt05").value = values [1]
+					document.getElementById("txt06").value = values [2]
+					document.getElementById("txt07").value = values [3]
+				}else {
+					document.getElementById("txt09").value = values [0]
+					document.getElementById("txt10").value = values [1]
+					document.getElementById("txt11").value = values [2]
+					document.getElementById("txt12").value = values [3]
+				}
+			}
+		}
+
+		// Autocomplete class for Conductor inputs
+		class AutoCompleteConductor {
+			constructor (inputSelector) {
+				let inputId        = "#" + inputSelector
+				this.inputSelector = inputSelector;
+				this.sourceUrl     = "opciones-conductor/"
+				this.fullData      = null;
+			}
+
+			// When ajax query is succesfull, set items
+			onAjaxSuccess (data) {
+				this.fullData = data;
+				let flatData = [];
+				for (let i=0; i < data.length; i++) {
+					flatData.push (data[i] ["itemLine"])
+				}
+				return flatData;
+			}
+
+			// When an item is selected, populate the textarea 
+			onItemSelected (ui) {
+				let index = ui.item.value.split (".")[0]
+				let text = this.fullData [index]["itemText"]
+				let values = text.split ("||");
+				let input = this.inputSelector
+				if (input.id === "txt13") {
+					document.getElementById("txt13").value = values [0]
+					document.getElementById("txt14").value = values [1]
+					document.getElementById("txt15").value = values [2]
+					document.getElementById("txt16").value = values [3]
+					document.getElementById("txt17").value = values [4]
+				}else {
+					document.getElementById("txt18").value = values [0]
+					document.getElementById("txt19").value = values [1]
+					document.getElementById("txt20").value = values [2]
+					document.getElementById("txt21").value = values [3]
+					document.getElementById("txt22").value = values [4]
+				}
+			}
+		}
+
+		// Return array of selected textAreas according to className
+		function getTextAreasByClassName (className) {
+			let selectedTextAreas = []
+			textAreas.forEach (textArea => {
+				if (textArea.className.includes (className)) {
+					selectedTextAreas.push (textArea)
+				}
+			});
+			return (selectedTextAreas);
+		}
+
+</script>
+</body>
+</html>
+
+ 

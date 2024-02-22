@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.db.models import Q
 
 # Own imports
-from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
+from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
 from .views_EcuapassDocView import EcuapassDocView
 from .models import Cartaporte, CartaporteDoc, Manifiesto, Vehiculo, Conductor
 

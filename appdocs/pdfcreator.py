@@ -13,7 +13,7 @@ from PIL import Image
 
 # For loading resources
 #from .resourceloader import ResourceLoader 
-from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
+from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
 
 #----------------------------------------------------------------
 # Crea un documento PDF con background y textos

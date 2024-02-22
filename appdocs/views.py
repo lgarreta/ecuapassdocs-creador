@@ -178,6 +178,35 @@ class DeclaracionListView(generic.ListView):
 	model = Declaracion
 
 #--------------------------------------------------------------------
+#-- Declaracion
+#--------------------------------------------------------------------
+
+class DeclaracionListView(generic.ListView):
+	model = Declaracion
+
+class DeclaracionDetailView(generic.DetailView):
+	model = Declaracion
+
+class DeclaracionCreate(login_required_class(CreateView)):
+	model = Declaracion
+	fields = '__all__'
+
+class DeclaracionDoc(login_required_class(UpdateView)):
+	model = Declaracion
+	fields = '__all__'
+	#fields = ['tipo','remitente','destinatario','fecha_emision']
+
+class DeclaracionUpdate(login_required_class(UpdateView)):
+	model = Declaracion
+	fields = '__all__'
+	#fields = ['tipo','remitente','destinatario','fecha_emision']
+
+class DeclaracionDelete(login_required_class(DeleteView)):
+	model = Declaracion
+	success_url = reverse_lazy('declaraciones')
+
+
+#--------------------------------------------------------------------
 # Messages view
 #--------------------------------------------------------------------
 def messagesView (request):

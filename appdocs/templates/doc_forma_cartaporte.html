@@ -9,14 +9,19 @@
 	<div id="background"></div>
 		<form action="{% url 'cartaporte' %}" method="post" id="forma_pdf" target="_blank">
 			<div class="container">
-				{% csrf_token %}
-				<!-- Panel superior que muestra cuatro opciones para realizar con el documento -->
 				<div class="top-panel">
 					<button type="submit" id="pdf_preliminar_btn" name="action" value="preliminar">PDF preliminar</button>
 					<button type="submit" id="pdf_original_btn"  name="action" value="original">PDF original</button>
 					<button type="submit" id="pdf_copia_btn" name="action" value="copia">PDF copia</button>
 					<button type="submit" id="pdf_clonar_btn" name="action" value="clonar">Clonar</button>
 				</div>
+				{% csrf_token %}
+				<!-- Panel superior que muestra cuatro opciones para realizar con el documento -->
+
+
+
+
+
 				<!--------------------------------------------------------------->
 				<!------------- Input fields added dynamically ------------------>
 				<!--------------------------------------------------------------->

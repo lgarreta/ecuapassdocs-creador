@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Template</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: auto; /* Enable scrollbars when the content overflows */
+        }
+
+        body {
+            /* background-image: url('{% static "your_app/images/background.jpg" %}');*/
+            background-image: url('{% static "creador/images/background.jpg" %}');
+            background-size: auto; /* Use 'auto' to maintain the image's original size */
+            background-repeat: repeat; /* Use 'repeat' to allow repeating in both directions */
+            /* Add any other styles you need for your body */
+            color: #fff; /* Set text color to white or a color that contrasts well with the background */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        /* Customize styles for text fields and other widgets as needed */
+        input[type="text"], input[type="password"], textarea {
+            width: 300px;
+            padding: 10px;
+            margin: 5px;
+        }
+
+        /* Add other styles as needed */
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <!-- Your text fields and other widgets go here -->
+        <form>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+
+            <br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+
+            <br>
+
+            <!-- Add more fields as needed -->
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

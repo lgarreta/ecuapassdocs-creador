@@ -1,0 +1,30 @@
+#--------------------------------------------------------------------
+#-- Cartaporte
+#--------------------------------------------------------------------
+#class CartaporteDocDetailView(generic.DetailView):
+#	 model = Cartaporte
+
+class CartaporteListView(generic.ListView):
+	model = Cartaporte
+
+class CartaporteDetailView(generic.DetailView):
+	model = Cartaporte
+
+class CartaporteCreate(login_required_class(CreateView)):
+	model = Cartaporte
+	fields = '__all__'
+
+class CartaporteDoc(login_required_class(UpdateView)):
+	model = Cartaporte
+	fields = '__all__'
+	#fields = ['tipo','remitente','destinatario','fecha_emision']
+
+class CartaporteUpdate(login_required_class(UpdateView)):
+	model = Cartaporte
+	fields = '__all__'
+	#fields = ['tipo','remitente','destinatario','fecha_emision']
+
+class CartaporteDelete(login_required_class(DeleteView)):
+	model = Cartaporte
+	success_url = reverse_lazy('cartaportes')
+

@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 # Own imports
+from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
 from .views_EcuapassDocView import EcuapassDocView
 from .models import Vehiculo, Conductor
 
@@ -22,7 +23,9 @@ class DeclaracionDocView (EcuapassDocView):
 	parameters_file  = "declaracion_input_parameters.json"
 
 	def __init__(self, *args, **kwargs):
-		super().__init__ (self.document_type, self.template_name, self.background_image, self.parameters_file, *args, **kwargs)
+		self.inputParameters = ResourceLoader.loadJson ("docs", self.parameters_file)
+		super().__init__ (self.document_type, self.template_name, self.background_image, 
+		                  self.parameters_file, self.inputParameters, *args, **kwargs)
 
 #--------------------------------------------------------------------
 #-- Class for autocomplete options while the user is typing

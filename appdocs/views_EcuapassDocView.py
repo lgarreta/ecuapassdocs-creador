@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.contrib import messages
+from django.contrib.messages import add_message
 
 # For CSRF protection
 from django.utils.decorators import method_decorator
@@ -17,7 +17,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import resolve   # To get calling URLs
 
 # Own imports
-from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
+from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
 #from ecuapassdocs.ecuapassutils.pdfcreator import CreadorPDF 
 from .pdfcreator import CreadorPDF 
 
@@ -50,22 +50,17 @@ class EcuapassDocView (LoginRequiredMixin, View):
 
 		# Check if user has reached his total number of documents
 		if self.limiteDocumentosAsignados (request.user, self.document_type):
-			text = "Límite de documents alcanzado. No puede crear documentos."
-			messages.add_message (request, messages.ERROR, text)
+			add_message (request, messages.ERROR, "Límite de documents alcanzado. No puede crear documentos.")
 			return render (request, 'messages.html')
 			
-		# If edit, retrieve the additional parameter from kwargs
+		# If edit, retrieve the PK from kwargs and load input parameters from package
 		pk = kwargs.get ('pk')
-
-		# Load parameters from package
-		# inputParameters = ResourceLoader.loadJson ("docs", self.parameters_file)
 		if pk:
-			self.setSavedValuesToInputs (pk)
+			result = self.setSavedValuesToInputs (pk)
+			if result == None:
+				add_message (request, messages.ERROR, "Tipo de documento desconocido")
+				return render (request, 'messages.html')
 			
-		# Set "codigo pais" ("CO", "EC") from URL pattern ("exportacion" or "importacion")
-		# Values is set into "txt0a" key of inputParameters (Valid for NTA and BYZA)
-		#self.inputParameters = self.getCodigoPaisFromURL (request, self.inputParameters)
-
 		# Send input fields parameters (bounds, maxLines, maxChars, ...)
 		contextDic = {"document_type"	 : self.document_type, 
 					  "input_parameters" : self.inputParameters, 
@@ -117,6 +112,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 
 	#-------------------------------------------------------------------
 	#-- Set constant values for the BYZA company
+	#-- Overloaded in sublclasses
 	#-------------------------------------------------------------------
 	def setInitialValuesToInputs (self, request):
 		# Importacion/Exportacion code for BYZA
@@ -178,9 +174,11 @@ class EcuapassDocView (LoginRequiredMixin, View):
 			docRecord = CartaporteDoc.objects.get (id=recordId)
 		elif (self.document_type == "manifiesto"):
 			docRecord = ManifiestoDoc.objects.get (id=recordId)
+		elif (self.document_type == "declaracion"):
+			docRecord = DeclaracionDoc.objects.get (id=recordId)
 		else:
-			print (f"Error: Tipo de documento '{document_type}' no soportado")
-			sys.exit (0)
+			print (f"Error: Tipo de documento '{self.document_type}' no soportado")
+			return None
 
 		# Iterating over fields
 		for field in docRecord._meta.fields [2:]:	# Not include "numero" and "id"
