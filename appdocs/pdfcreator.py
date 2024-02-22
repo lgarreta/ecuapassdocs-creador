@@ -85,7 +85,7 @@ class CreadorPDF:
 			if params ["font"] == "hidden":
 				FONTSIZE = 0
 			elif params ["font"] == "normal":
-				FONTSIZE = 9
+				FONTSIZE = 8
 			elif params ["font"] == "large":
 				FONTSIZE = 16
 			elif params ["font"] == "small":
