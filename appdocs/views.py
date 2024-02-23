@@ -121,8 +121,6 @@ class ConductorDelete(login_required_class(DeleteView)):
 #--------------------------------------------------------------------
 #-- Cartaporte
 #--------------------------------------------------------------------
-#class CartaporteDocDetailView(generic.DetailView):
-#	 model = Cartaporte
 
 class CartaporteListView(generic.ListView):
 	model = Cartaporte

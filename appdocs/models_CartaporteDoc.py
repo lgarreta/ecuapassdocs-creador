@@ -54,7 +54,7 @@ class CartaporteDoc (models.Model):
 	txt17_44 = models.CharField (max_length=200, null=True) # USD
 	#-------------------------------------------------------
 	txt18 = models.CharField (max_length=200, null=True)
-	txt19 = models.CharField (max_length=200, null=True)
+	txt19 = models.CharField (max_length=50, null=True)
 	txt20 = models.CharField (max_length=200, null=True)
 	txt21 = models.CharField (max_length=200, null=True)
 	txt22 = models.CharField (max_length=200, null=True)
