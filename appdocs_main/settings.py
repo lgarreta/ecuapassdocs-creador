@@ -87,31 +87,31 @@ WSGI_APPLICATION = "appdocs_main.wsgi.application"
 #}
 
 # Remote railway database
-#DATABASES = {
-#	'default': {
-#		'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-#		#'NAME'	  : os.environ.get ('PGDATABASE'),
-#		'NAME'	  : 'ecuapassdocsdb',
-#		#'USER'	  : os.environ.get ('PGUSER'),
-#		'USER'	  : 'byza',
-#		#'PASSWORD': os.environ.get ('PGPASSWORD'),
-#		'PASSWORD': 'byza2024A.',
-#		'HOST'	  : os.environ.get ('PGHOST'),
-#		'PORT'	  : os.environ.get ('PGPORT'),
-#	}
-#}
+DATABASES = {
+	'default': {
+		'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+		#'NAME'	  : os.environ.get ('PGDATABASE'),
+		'NAME'	  : 'ecuapassdocsdb',
+		#'USER'	  : os.environ.get ('PGUSER'),
+		'USER'	  : 'byza',
+		#'PASSWORD': os.environ.get ('PGPASSWORD'),
+		'PASSWORD': 'byza2024A.',
+		'HOST'	  : os.environ.get ('PGHOST'),
+		'PORT'	  : os.environ.get ('PGPORT'),
+	}
+}
 
 # Local postgress database
-DATABASES = {
-	 'default': {
-		 'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-		 'NAME': 'ecuapassdocsdb',
-		 'USER': 'byza',
-		 'PASSWORD': 'byza2024',
-		 'HOST': 'localhost',
-		 'PORT': '5432',
-	 }
-}
+#DATABASES = {
+#	 'default': {
+#		 'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+#		 'NAME': 'ecuapassdocsdb',
+#		 'USER': 'byza',
+#		 'PASSWORD': 'byza2024',
+#		 'HOST': 'localhost',
+#		 'PORT': '5432',
+#	 }
+#}
 
 
 # Password validation

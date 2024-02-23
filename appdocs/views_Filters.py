@@ -1,11 +1,40 @@
-
 from django.shortcuts import render
+from django import forms
 
-#from .models_CartaporteDoc import Cartaporte, CartaporteDoc
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, Row, Column
+
 from .models import Cartaporte, Manifiesto
-from .forms import CartaportesFilterForm, ManifiestosFilterForm
+#from .forms import CartaportesFilterForm, ManifiestosFilterForm
 
-def cartaportes_filter (request):
+
+
+#--------------------------------------------------------------------
+#-- CartaportesFilter Form
+#--------------------------------------------------------------------
+class CartaportesFilterForm (forms.Form):
+	numero		   = forms.CharField(required=False)
+	fecha_emision  = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+	remitente	   = forms.CharField(required=False)
+
+	def __init__(self, *args, **kwargs):
+		super (CartaportesFilterForm, self).__init__(*args, **kwargs)
+		self.helper = FormHelper()
+		self.helper.form_method = 'GET'
+		self.helper.layout = Layout(
+			Row (
+				Column ('numero', css_class='col'),
+				Column ('fecha_emision', css_class='col'),
+				Column ('remitente', css_class='col'),
+				css_class='row'
+			),
+			Submit ('submit', 'Filtrar', css_class='btn btn-primary')
+		)
+
+#--------------------------------------------------------------------
+#-- CartaportesFilter View
+#--------------------------------------------------------------------
+def cartaportesFilterView (request):
 	cartaportes = Cartaporte.objects.all()
 	form  = CartaportesFilterForm (request.GET)
 	if form.is_valid():
@@ -25,8 +54,32 @@ def cartaportes_filter (request):
 
 	return render(request, 'appdocs/cartaportes_filter.html', {'cartaporte_list': cartaportes, 'form': form})
 
+#--------------------------------------------------------------------
+#-- ManifiestosFilter Form
+#--------------------------------------------------------------------
+class ManifiestosFilterForm (forms.Form):
+	numero		   = forms.CharField(required=False)
+	fecha_emision  = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+	vehiculo	   = forms.CharField(required=False)
 
-def manifiestos_filter (request):
+	def __init__(self, *args, **kwargs):
+		super (ManifiestosFilterForm, self).__init__(*args, **kwargs)
+
+		self.helper = FormHelper()
+		self.helper.layout = Layout(
+			Row (
+				Column ('numero', css_class='col'),
+				Column ('fecha_emision', css_class='col'),
+				Column ('vehiculo', css_class='col'),
+				css_class='row'
+			),
+			Submit ('submit', 'Filtrar', css_class='btn btn-primary')
+		)
+
+#--------------------------------------------------------------------
+#-- ManifiestosFilter View
+#--------------------------------------------------------------------
+def manifiestosFilterView (request):
 	manifiestos = Manifiesto.objects.all()
 	form  = ManifiestosFilterForm (request.GET)
 	if form.is_valid():

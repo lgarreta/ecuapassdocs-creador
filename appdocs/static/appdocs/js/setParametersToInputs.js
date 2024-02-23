@@ -41,8 +41,8 @@ function convertToUpperCase (textArea) {
 		textArea.setSelectionRange(start, end);
 }
 
-// Handle the event went user leaves out a textares
-function handleBlur (textareaId, document_type, textAreasDict) {
+// Handle the event went user leaves out textareas
+function handleBlur (textareaId, document_type, textAreasDict, textarea) {
 	if (document_type == "cartaporte") {
 		//-- Copy "ciudad-pais. fecha" to other inputs (BYZA)
 		if (textareaId == "txt06") {
@@ -52,14 +52,18 @@ function handleBlur (textareaId, document_type, textAreasDict) {
 		//-- Calculate totals when change gastos table values
 		remitenteInputs = {"txt17_11":"txt17_21","txt17_12":"txt17_22","txt17_13":"txt17_23"}
 		if (Object.keys (remitenteInputs).includes (textareaId)) {
-			textAreasDict [remitenteInputs [textareaId]].value = "USD"
+			if (textarea.value != "")
+				textAreasDict [remitenteInputs [textareaId]].value = "USD"
+
 			setTotal (Object.keys (remitenteInputs), "txt17_14", textAreasDict);
 			textAreasDict ["txt17_24"].value = "USD"
 		}
 
 		destinatarioInputs = {"txt17_31":"txt17_41","txt17_32":"txt17_42","txt17_33":"txt17_43"}
 		if (Object.keys (destinatarioInputs).includes (textareaId)) {
-			textAreasDict [destinatarioInputs [textareaId]].value = "USD"
+			if (textarea.value != "")
+				textAreasDict [destinatarioInputs [textareaId]].value = "USD"
+
 			setTotal (Object.keys (destinatarioInputs), "txt17_34", textAreasDict);
 			textAreasDict ["txt17_44"].value = "USD"
 		}
@@ -108,7 +112,7 @@ function setParametersToInputs (textAreas, inputParameters, document_type) {
 
 		// Handle blur event for auto filling
 		textArea.addEventListener ("blur", function (event) {
-			handleBlur (event.target.id, document_type, textAreasDict);
+			handleBlur (event.target.id, document_type, textAreasDict, this);
 		});
 	});
 }

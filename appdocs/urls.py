@@ -26,27 +26,28 @@ urlpatterns = [
     path('cartaporte/<pk>/', CartaporteDocView.as_view(), name='cartaporte-documento'),
 
     path('cartaportes/', views.CartaporteListView.as_view(), name='cartaportes'),
-    path('cartaportes_filter/', views_Filters.cartaportes_filter, name='cartaportes_filter'),
+    path('cartaportes_filter/', views_Filters.cartaportesFilterView, name='cartaportes_filter'),
     path('cartaportes/<pk>', views.CartaporteDetailView.as_view(), name='cartaporte-detail'),
     path('cartaporte/create/', views.CartaporteCreate.as_view(), name='cartaporte-create'),
     path('cartaporte/<pk>/update/', views.CartaporteUpdate.as_view(), name='cartaporte-update'),
     path('cartaporte/<pk>/delete/', views.CartaporteDelete.as_view(), name='cartaporte-delete'),
 
+	#-- URLs manifiesto -----------------------------------------------
     path("manifiesto/", ManifiestoDocView.as_view(), name="manifiesto"),
     path("manifiesto/importacion", ManifiestoDocView.as_view(), name="manifiesto-importacion"),
     path("manifiesto/exportacion", ManifiestoDocView.as_view(), name="manifiesto-exportacion"),
+
     path('manifiesto/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
-
     path('manifiesto/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
-    path('manifiesto/<pk>/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
 
+    path('manifiesto/<pk>/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
     path('manifiesto/<pk>/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/<pk>/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('manifiesto/<pk>/', ManifiestoDocView.as_view(), name='manifiesto-documento'),
 
     path('manifiestos/', views.ManifiestoListView.as_view(), name='manifiestos'),
-    path('manifiestos_filter/', views_Filters.manifiestos_filter, name='manifiestos_filter'),
+    path('manifiestos_filter/', views_Filters.manifiestosFilterView, name='manifiestos_filter'),
     path('manifiestos/<pk>', views.ManifiestoDetailView.as_view(), name='manifiesto-detail'),
     path('manifiesto/create/', views.ManifiestoCreate.as_view(), name='manifiesto-create'),
     path('manifiesto/<pk>/update/', views.ManifiestoUpdate.as_view(), name='manifiesto-update'),
