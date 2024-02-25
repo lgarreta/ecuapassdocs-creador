@@ -8,6 +8,7 @@ from .views import InfoView
 from .views_CartaporteDocView import *
 from .views_ManifiestoDocView import *
 from .views_DeclaracionDocView import *
+from .views_Entidades import *
 
 #app_name = "appdocs"
 
@@ -56,10 +57,14 @@ urlpatterns = [
 
 	#-- URLs declaracion -----------------------------------------------
     path("declaracion/", DeclaracionDocView.as_view(), name="declaracion"),
+    path('declaracion/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
+    path('declaracion/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
     path('declaracion/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('declaracion/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('declaracion/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
 
+    path('declaracion/<pk>/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
+    path('declaracion/<pk>/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
     path('declaracion/<pk>/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('declaracion/<pk>/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('declaracion/<pk>/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),

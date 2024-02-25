@@ -54,12 +54,13 @@ class ManifiestoDocView (EcuapassDocView):
 class CartaporteOptionsView (View):
 	@method_decorator(csrf_protect)
 	def get (self, request, *args, **kwargs):
+		print ("--get CartaporteOptionsView")
 		itemOptions = []
 		try:
 			# Get cartaporte docs from query
 			query = request.GET.get ('query', '')
 			current_date = datetime.date.today()    
-			currentCartaportes = Cartaporte.objects.filter (numero__istartswith=query,
+			currentCartaportes = Cartaporte.objects.filter (numero__startswith=query,
 															fecha_emision=current_date)
 			docsCartaportes = [model.documento.__dict__ for model in currentCartaportes]
 
@@ -79,47 +80,50 @@ class CartaporteOptionsView (View):
 							doc ["txt15"])   # Otras unidades total
 
 				newOption = {"itemLine" : itemLine, "itemText" : itemText}
+				print ("--itemLine:", itemLine)
+				print ("--itemText:", itemText)
 				itemOptions.append (newOption)
 		except:
 			print (">>> Excepcion obteniendo opciones de cartaportes")
 			
 		return JsonResponse (itemOptions, safe=False)
 
-#--------------------------------------------------------------------
-# Show options when user types in "input_placaPais"
-#--------------------------------------------------------------------
-class VehiculoOptionsView (View):
-	@method_decorator(csrf_protect)
-	def get (self, request, *args, **kwargs):
-		query = request.GET.get('query', '')
-		options = Vehiculo.objects.filter (placa__istartswith=query).values()
-
-		itemOptions = []
-		for i, option in enumerate (options):
-			itemLine = f"{i}. {option['placa']}"
-			itemText = "%s||%s||%s. %s||%s" % (option["marca"], option["anho"], 
-			            option["placa"], option ["pais"], option ["chasis"])
-			newOption = {"itemLine" : itemLine, "itemText" : itemText}
-			itemOptions.append (newOption)
-		
-		return JsonResponse (itemOptions, safe=False)
-
-#--------------------------------------------------------------------
-# Show options when user types in "input_placaPais"
-#--------------------------------------------------------------------
-class ConductorOptionsView (View):
-	@method_decorator(csrf_protect)
-	def get (self, request, *args, **kwargs):
-		query = request.GET.get('query', '')
-		options = Conductor.objects.filter (nombre__istartswith=query).values()
-
-		itemOptions = []
-		for i, option in enumerate (options):
-			itemLine = f"{i}. {option['nombre']}"
-			itemText = "%s||%s||%s||%s||%s" % (option["nombre"], option["documento"], 
-			           option["nacionalidad"], option ["licencia"], option ["fecha_nacimiento"])
-			newOption = {"itemLine" : itemLine, "itemText" : itemText}
-			itemOptions.append (newOption)
-		
-		return JsonResponse (itemOptions, safe=False)
-
+##--------------------------------------------------------------------
+## Show options when user types in "input_placaPais"
+##--------------------------------------------------------------------
+#class VehiculoOptionsView (View):
+#	@method_decorator(csrf_protect)
+#	def get (self, request, *args, **kwargs):
+#		query = request.GET.get('query', '')
+#		options = Vehiculo.objects.filter (placa__istartswith=query).values()
+#
+#		itemOptions = []
+#		for i, option in enumerate (options):
+#			itemLine = f"{i}. {option['placa']}"
+#			itemText = "%s||%s||%s. %s||%s" % (option["marca"], option["anho"], 
+#			            option["placa"], option ["pais"], option ["chasis"])
+#			newOption = {"itemLine" : itemLine, "itemText" : itemText}
+#			itemOptions.append (newOption)
+#		
+#		return JsonResponse (itemOptions, safe=False)
+#
+##--------------------------------------------------------------------
+## Show options when user types in "input_placaPais"
+##--------------------------------------------------------------------
+#class ConductorOptionsView (View):
+#	@method_decorator(csrf_protect)
+#	def get (self, request, *args, **kwargs):
+#		query = request.GET.get('query', '')
+#		options = Conductor.objects.filter (nombre__istartswith=query).values()
+#
+#		itemOptions = []
+#		for i, option in enumerate (options):
+#			itemLine = f"{i}. {option['nombre']}"
+#			itemText = "%s||%s||%s||%s||%s" % (option["nombre"], option["documento"], 
+#			           option["nacionalidad"], option ["licencia"], option ["fecha_nacimiento"])
+#			newOption = {"itemLine" : itemLine, "itemText" : itemText}
+#			itemOptions.append (newOption)
+#		
+#		return JsonResponse (itemOptions, safe=False)
+#
+#

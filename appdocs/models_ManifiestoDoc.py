@@ -60,8 +60,8 @@ class ManifiestoDoc (models.Model):
 	txt32_2 = models.CharField (max_length=200, null=True)  # Peso bruto total
 	txt32_3 = models.CharField (max_length=200, null=True)  # Peso neto
 	txt32_4 = models.CharField (max_length=200, null=True)  # Peso neto total
-	txt33_1 = models.CharField (max_length=200, null=True)  # Otra medidad
-	txt33_2 = models.CharField (max_length=200, null=True)  # Total otra medida
+	txt33_1 = models.CharField (max_length=200, null=True)  # Otra medida
+	txt33_2 = models.CharField (max_length=200, null=True)  # Otra medida total
 	txt34 = models.CharField (max_length=200, null=True)    # INCOTERMS
 	#------------------------------------------------------------
 	txt35 = models.CharField (max_length=200, null=True)
@@ -79,13 +79,13 @@ class ManifiestoDoc (models.Model):
 #--------------------------------------------------------------------
 class Manifiesto (models.Model):
 	numero        = models.CharField (max_length=20)
-	vehiculo      = models.ForeignKey (Vehiculo, on_delete=models.DO_NOTHING, related_name='vehiculo', null=True)
-	cartaporte    = models.ForeignKey (Cartaporte, on_delete=models.RESTRICT, null=True)
+	vehiculo      = models.ForeignKey (Vehiculo, on_delete=models.SET_NULL, related_name='vehiculo', null=True)
+	cartaporte    = models.ForeignKey (Cartaporte, on_delete=models.SET_NULL, null=True)
 
 	documento     = models.OneToOneField (ManifiestoDoc, on_delete=models.SET_NULL, null=True)
 	fecha_emision = models.DateField (default=date.today)
 	procedimiento = models.CharField (max_length=30)
-	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.DO_NOTHING, null=True)
+	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.SET_NULL, null=True)
 
 	def get_absolute_url(self):
 		"""Returns the url to access a particular language instance."""

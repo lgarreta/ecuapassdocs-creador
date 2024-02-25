@@ -82,9 +82,9 @@ class Cartaporte (models.Model):
 	documento     = models.OneToOneField (CartaporteDoc, on_delete=models.SET_NULL, null=True)
 	fecha_emision = models.DateField (default=date.today)
 	procedimiento = models.CharField (max_length=30)
-	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.DO_NOTHING, null=True)
+	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.SET_NULL, null=True)
 
-	remitente     = models.ForeignKey (Empresa, on_delete=models.CASCADE, null=True)
+	remitente     = models.ForeignKey (Empresa, on_delete=models.SET_NULL, null=True)
 
 	def get_absolute_url(self):
 		"""Returns the url to access a particular language instance."""

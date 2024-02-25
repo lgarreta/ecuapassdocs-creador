@@ -101,15 +101,15 @@ DATABASES = {
 	}
 }
 
-# Local postgress database
+## Local postgress database
 #DATABASES = {
 #	 'default': {
 #		 'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-#		 'NAME': 'ecuapassdocsdb',
-#		 'USER': 'byza',
+#		 'NAME'    : 'ecuapassdocsdb',
+#		 'USER'    : 'byza',
 #		 'PASSWORD': 'byza2024',
-#		 'HOST': 'localhost',
-#		 'PORT': '5432',
+#		 'HOST'    : 'localhost',
+#		 'PORT'    : '5432',
 #	 }
 #}
 
