@@ -3,11 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from .models_CartaporteDoc import Cartaporte, CartaporteDoc
 from .models_ManifiestoDoc import Manifiesto, ManifiestoDoc
+from .models_DeclaracionDoc import Declaracion, DeclaracionDoc
 from .models_Entidades import Empresa, Conductor, Vehiculo
-
-#from .models_CartaporteDoc import Empresa, Cartaporte, CartaporteDoc
-#from .models_ManifiestoDoc import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
-#from .models import Empresa, Conductor, Vehiculo, Cartaporte, Manifiesto
 
 #admin.site.register(Empresa)
 #admin.site.register(Conductor)
@@ -41,3 +38,9 @@ class ManifiestoAdmin(admin.ModelAdmin):
     list_display = ('numero', 'vehiculo', 'cartaporte', 'fecha_emision')
 
 admin.site.register(Manifiesto, ManifiestoAdmin)
+
+class DeclaracionAdmin(admin.ModelAdmin):
+    list_display = ('numero', 'cartaporte', 'fecha_emision')
+
+admin.site.register(Declaracion, DeclaracionAdmin)
+

@@ -16,8 +16,8 @@ os.system ("python manage.py makemigrations")
 a = input ("Migrate...")
 os.system ("python manage.py migrate")
 
-#a = input ("Superuser...")
-#os.system ("python manage.py createsuperuser ")
+a = input ("Superuser...")
+os.system ("python manage.py createsuperuser ")
 
 # PostgreSQL database connection parameters
 # Local posgress DB
