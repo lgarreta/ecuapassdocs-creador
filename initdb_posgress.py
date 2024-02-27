@@ -23,10 +23,10 @@ os.system ("python manage.py createsuperuser ")
 # Local posgress DB
 db_params= {
     'dbname': 'ecuapassdocsdb',
-    'user': 'byza',
-    'password': 'byza2024',
+    'user': 'admindb',
+    'password': 'admindb2024A.',
     'host': 'localhost',
-    'port': '5432',
+    'port': '5433',
 }
 """
 

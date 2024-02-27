@@ -70,13 +70,4 @@ class UsuarioEcuapass (AbstractUser):
 
 	#-------------------------------------------------------------------
 
-#	def es_funcionario (self):
-#		return self.perfil == 'funcionario'
-#
-#	def es_externo (self):
-#		return self.perfil == 'externo'
-#
-#	def es_director (self):
-#		return self.perfil == 'director'
-
 	objects = UsuarioEcuapassManager ()
