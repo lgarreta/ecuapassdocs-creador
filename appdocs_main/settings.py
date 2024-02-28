@@ -21,8 +21,17 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-*e!pw-wwqm=az^
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['ecuapassdocs-production.up.railway.app', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://ecuapassdocs-production.up.railway.app']
+ALLOWED_HOSTS = [
+    'ecuapassdocs-test.up.railway.app', 
+    'ecuapassdocs-mirror.up.railway.app', 
+    'ecuapassdocs-production.up.railway.app', 
+    'ecuapassdocs.up.railway.app', 
+	'127.0.0.1']
+CSRF_TRUSTED_ORIGINS = [
+    'https://ecuapassdocs-test.up.railway.app',
+    'https://ecuapassdocs-mirror.up.railway.app',
+    'https://ecuapassdocs-production.up.railway.app',
+    'https://ecuapassdocs.up.railway.app']
 
 
 # Application definition

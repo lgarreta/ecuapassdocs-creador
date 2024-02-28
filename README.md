@@ -4,4 +4,5 @@
 - Custom user management
 
 ## LOG
-- 28/02: Added scripts for database inicialization
+28/02: Added scripts for database inicialization
+28/02: Added allowed hosts: test and mirror.
