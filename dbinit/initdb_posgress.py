@@ -21,6 +21,7 @@ os.system ("python manage.py createsuperuser ")
 
 # PostgreSQL database connection parameters
 # Local posgress DB
+"""
 db_params= {
     'dbname': 'ecuapassdocsdb',
     'user': 'admindb',
@@ -31,21 +32,14 @@ db_params= {
 """
 
 # Railway
-#db_params= {
-#	'dbname'  : os.environ.get ('PGDATABASE'),
-#	'user'	  : os.environ.get ('PGUSER'),
-#	'password': os.environ.get ('PGPASSWORD'),
-#	'host'	  : os.environ.get ('PGHOST'),
-#	'port'	  : os.environ.get ('PGPORT'),
-#}
+db_params= {
+	'dbname'  : os.environ.get ('PGDATABASE'),
+	'user'	  : os.environ.get ('PGUSER'),
+	'password': os.environ.get ('PGPASSWORD'),
+	'host'	  : os.environ.get ('PGHOST'),
+	'port'	  : os.environ.get ('PGPORT'),
+}
 
-# Data to insert
-#data = [
-#    {'field1': 'value1', 'field2': 'value2'},
-#    {'field1': 'value3', 'field2': 'value4'},
-#    # Add more data as needed
-#]
-"""
 
 def execute_sql_query(query, values=None):
     conn = psycopg2.connect(**db_params)

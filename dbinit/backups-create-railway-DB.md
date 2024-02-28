@@ -1,20 +1,22 @@
-- Create a new DB service on railway
-- Copy Railway DB settings:
+## Create a new DB service on railway
 
-	PGHOST=viaduct.proxy.rlwy.net
-	PGUSER=postgres
-	PGPASSWORD=3GAdAdBCCgAd5E*c4EFc54Eaf-D35a1D
-	PGPORT=52171
+## Login to Railway and link to project using railway CLI:
+railway login
+railway link
 
-- Connect to Railway server as a 'postgres' superuser
-	linux=$ psql -h $PGHOST -U $PGUSER -p $PGPORT
+## Get Railway vars:
+railway variables --json > dbvars-railway-db-lgarreta.json
 
-- Create DB, USER, and GRANT PRIVILEGES
-	railway=# CREATE DATABASE ecuapassdocsdb;
-	railway=# CREATE USER admindb WITH PASSWORD 'XXX';
-	railway=# GRANT ALL PRIVILEGES ON DATABASE ecuapassdocsdb TO admindb;
+## Source variables:
+source-dbvars.py dbvars-railway-db-lgarreta.json > varsPG.sh
+source varsPG.sh
 
-- Set postgress DB: Set Railway PG variables to previous DB settings:
+## Create DB, USER, and GRANT PRIVILEGES
+psql -c "CREATE USER admindb WITH PASSWORD 'admindb';"
+psql -c "CREATE DATABASE ecuapassdocsdb WITH OWNER='admindb';"
+psql -c "GRANT ALL PRIVILEGES ON DATABASE ecuapassdocsdb TO admindb;"
+
+## Update Railway PG variables to current DB settings:
 	PGDATABASE="ecuapassdocsdb"
 	PGUSER="admindb"
 	PGPASSWORD="admindb2024A."
