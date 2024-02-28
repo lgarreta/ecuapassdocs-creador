@@ -21,7 +21,7 @@ psql -c "GRANT ALL PRIVILEGES ON DATABASE ecuapassdocsdb TO admindb;"
 	PGUSER="admindb"
 	PGPASSWORD="admindb2024A."
 
-- Set web DB vars: Set shared variables to the PG variables:
+## Set web DB vars: Set shared variables to the PG variables:
 	PGDATABASE="ecuapassdocsdb"
 	PGUSER="admindb"
 	PGPASSWORD="admindb2024A."
