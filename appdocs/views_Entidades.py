@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views import View
 from django.http import JsonResponse
 
-from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
+from ecuapassdocs.info.resourceloader import ResourceLoader 
 from .models import Cartaporte, Vehiculo, Conductor, Empresa
 
 #--------------------------------------------------------------------
@@ -95,28 +95,36 @@ class ConductorOptionsView (View):
 
 
 #--------------------------------------------------------------------
-# CiudadPaisOptionsView
+# Options for autocomplete for "Ciudad-Pais. Fecha"
 #--------------------------------------------------------------------
-# For textarea options
-from django.db.models import Q
-
 class CiudadPaisOptionsView (View):
 	@method_decorator(csrf_protect)
 	def get (self, request, *args, **kwargs):
 		query = request.GET.get('query', '')
-		ciudadesPaises = ResourceLoader.loadText ("data-cartaportes", "ciudades-paises-colombia-ecuador.txt")
-		ciudadesPaises = [x.upper().strip() for x in ciudadesPaises if x.upper().startswith (query)]
+		ciudadesPaises = self.getCiudadesPaisesFromQuery (query)
 
 		itemOptions = []
 		currentDate = self.getFormatedCurrentDate ()
 		for i, item in enumerate (ciudadesPaises):
 			itemLine = f"{i}. {item}"
-			itemText = f"{item}. {currentDate}"
+			itemText = f"{item}. {currentDate}" if currentDate else f"{item}"
 			newItem = {"itemLine" : itemLine, "itemText" : itemText}
 			itemOptions.append (newItem)
 
 		return JsonResponse (itemOptions, safe=False)
 
+	#-- Return empty string for date
+	def getFormatedCurrentDate (self):
+		return ""
+
+	def getCiudadesPaisesFromQuery (self, query):
+		ciudadesPaises = ResourceLoader.loadText ("data_cartaportes", "ciudades-paises-colombia-ecuador.txt")
+		ciudadesPaises = [x.upper().strip() for x in ciudadesPaises if x.upper().startswith (query)]
+		return ciudadesPaises
+
+
+class CiudadPaisFechaOptionsView (CiudadPaisOptionsView):
+	#-- Return formated string for date
 	def getFormatedCurrentDate (self):
 		from datetime import datetime
 		spanish_months = { "January": "ENERO", "February": "FEBRERO", "March": "MARZO", "April": "ABRIL",
@@ -129,7 +137,6 @@ class CiudadPaisOptionsView (View):
 		formatted_time = current_time.strftime("%Y-{}-%d").format(spanish_months[current_time.strftime("%B")])
 
 		return (formatted_time)
-
 
 #--------------------------------------------------------------------
 #--EmpresaOptionsView

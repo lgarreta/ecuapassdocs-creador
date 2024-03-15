@@ -10,7 +10,7 @@ admin.site.site_title  = "Creación/Almacenamiento de Documentos del ECUAPASS"
 admin.site.index_title = "Creación/Almacenamiento de Documentos del ECUAPASS Admin"
 
 urlpatterns = [
-    #path("admin/", admin.site.urls),
+    path("admin/", admin.site.urls),
     path('', views.index, name='index'),
     path("usuarios/", include("appusuarios.urls")),
     path("documentos/", include("appdocs.urls")),

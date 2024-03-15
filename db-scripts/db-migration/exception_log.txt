@@ -1,0 +1,126 @@
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 204, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 204, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 196, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 196, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 196, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 197, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 197, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 198, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: FileNotFoundError
+Exception Value: [Errno 2] No such file or directory: 'CPI-BYZA-CO6861.pdf'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 198, in getEmbeddedFieldsFromPDF
+    with open(pdfPath, 'rb') as pdf_file:
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+
+>>> Excepcion: No se pudo leer campos embebidos en el documento PDF.
+Exception Type: AttributeError
+Exception Value: 'NoneType' object has no attribute 'group'
+Traceback:
+  File "/home/lg/BIO/iaprojects/ecuapassdocs/ecuapassdocs-creador/db-migration/ecuserver/ecuapass_doc.py", line 206, in getEmbeddedFieldsFromPDF
+    jsonText = re.search ("Embedded_jsonData: ({.*})", text).group(1)
+

@@ -8,7 +8,7 @@
 
       {% for cartaporte in cartaporte_list %}
       <li>
-        <a href="{{ cartaporte.get_absolute_url }}">{{ cartaporte.numero }}</a> ({{cartaporte.fecha_emision}})
+        <a href="{{ cartaporte.get_absolute_url }}" target=_"blank">{{ cartaporte.numero }}</a> ({{cartaporte.fecha_emision}})
       </li>
       {% endfor %}
 

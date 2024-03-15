@@ -13,7 +13,7 @@ from PIL import Image
 
 # For loading resources
 #from .resourceloader import ResourceLoader 
-from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
+from ecuapassdocs.info.resourceloader import ResourceLoader 
 
 #----------------------------------------------------------------
 # Crea un documento PDF con background y textos
@@ -122,10 +122,13 @@ class CreadorPDF:
 	#-- Info is embedded according to Azure format
 	#----------------------------------------------------------------
 	def embedFieldsIntoPDF (self, pdfCanvas, inputBounds, inputValues):
-		if self.docType == "manifiesto" or self.docType == "declaracion":
+		if self.docType == "manifiesto":
 			return self.embedFieldsIntoPDFManifiesto (pdfCanvas, inputBounds, inputValues)
 		elif self.docType == "cartaporte":
 			return self.embedFieldsIntoPDFCartaporte (pdfCanvas, inputBounds, inputValues)
+		elif self.docType == "declaracion":
+			print ("ALERTA: Aún no implementado la insersión de campos en declaraciones")
+			return self.embedFieldsIntoPDFManifiesto (pdfCanvas, inputBounds, inputValues)
 
 		return None
 

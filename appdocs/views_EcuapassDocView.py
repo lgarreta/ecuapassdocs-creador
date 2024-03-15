@@ -17,7 +17,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import resolve   # To get calling URLs
 
 # Own imports
-from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
+from ecuapassdocs.info.resourceloader import ResourceLoader 
 #from ecuapassdocs.ecuapassutils.pdfcreator import CreadorPDF 
 from .pdfcreator import CreadorPDF 
 
@@ -225,7 +225,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 			self.actualizarNroDocumentosCreados (username, self.document_type)
 
 			# Save Initial Cartaporte register
-			documentModel = modelClass (id=documentDoc.id, numero=documentDoc.numero)
+			documentModel = modelClass (id=documentDoc.id, numero=documentDoc.numero, documento=documentDoc)
 			documentModel.save ()
 
 			return documentDoc.numero

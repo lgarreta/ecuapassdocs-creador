@@ -15,6 +15,7 @@ from .views_Entidades import *
 urlpatterns = [
     path('', views.index, name='index'),
 
+	#-- URLs cartaporte -----------------------------------------------
     path("cartaporte/", CartaporteDocView.as_view(), name="cartaporte"),
     path("cartaporte/importacion", CartaporteDocView.as_view(), name="cartaporte-importacion"),
     path("cartaporte/exportacion", CartaporteDocView.as_view(), name="cartaporte-exportacion"),
@@ -23,6 +24,8 @@ urlpatterns = [
     path('cartaporte/<pk>/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
     path('cartaporte/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
     path('cartaporte/<pk>/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
+    path('cartaporte/opciones-lugar-fecha/', CiudadPaisFechaOptionsView.as_view(), name='opciones-lugar-fecha'),
+    path('cartaporte/<pk>/opciones-lugar-fecha/', CiudadPaisFechaOptionsView.as_view(), name='opciones-lugar-fecha'),
 
     path('cartaporte/<pk>/', CartaporteDocView.as_view(), name='cartaporte-documento'),
 
@@ -38,6 +41,8 @@ urlpatterns = [
     path("manifiesto/importacion", ManifiestoDocView.as_view(), name="manifiesto-importacion"),
     path("manifiesto/exportacion", ManifiestoDocView.as_view(), name="manifiesto-exportacion"),
 
+    path('manifiesto/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
+    path('manifiesto/<pk>/opciones-lugar/', CiudadPaisOptionsView.as_view(), name='opciones-lugar'),
     path('manifiesto/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('manifiesto/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
@@ -53,7 +58,6 @@ urlpatterns = [
     path('manifiesto/create/', views.ManifiestoCreate.as_view(), name='manifiesto-create'),
     path('manifiesto/<pk>/update/', views.ManifiestoUpdate.as_view(), name='manifiesto-update'),
     path('manifiesto/<pk>/delete/', views.ManifiestoDelete.as_view(), name='manifiesto-delete'),
-
 
 	#-- URLs declaracion -----------------------------------------------
     path("declaracion/", DeclaracionDocView.as_view(), name="declaracion"),

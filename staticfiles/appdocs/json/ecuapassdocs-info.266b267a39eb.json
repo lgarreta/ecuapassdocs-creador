@@ -1,0 +1,7 @@
+{
+	"name" : "ecuapassdocs",
+	"release" : "0.71",
+	"log": {
+		"r0.71" : "Fixed cartaporte PDF/PNG templates and bounds"
+		}
+}

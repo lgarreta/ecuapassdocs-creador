@@ -4,12 +4,14 @@ from datetime import date
 from django.db import models
 from django.urls import reverse  # To generate URLS by reversing URL patterns
 
-from ecuapassdocs.ecuapassinfo.ecuapass_utils import Utils
-from ecuapassdocs.ecuapassinfo.ecuapass_info_manifiesto_BYZA import ManifiestoByza
+from ecuapassdocs.info.ecuapass_utils import Utils
+from ecuapassdocs.info.ecuapass_info_manifiesto_BYZA import ManifiestoByza
 
-from .models_CartaporteDoc import Cartaporte
+from appdocs.models import EcuapassDoc, Cartaporte
+
 from appusuarios.models import UsuarioEcuapass
 from appdocs.models_Entidades import Empresa, Conductor, Vehiculo
+from appdocs.models_EcuapassDoc import EcuapassDoc
 
 #--------------------------------------------------------------------
 # Model DeclaracionDoc
@@ -57,13 +59,10 @@ class DeclaracionDoc (models.Model):
 #--------------------------------------------------------------------
 # Model Declaracion
 #--------------------------------------------------------------------
-class Declaracion (models.Model):
-	numero        = models.CharField (max_length=20)
-	cartaporte    = models.ForeignKey (Cartaporte, on_delete=models.SET_NULL, null=True)
-
+class Declaracion (EcuapassDoc):
 	documento     = models.OneToOneField (DeclaracionDoc, on_delete=models.SET_NULL, null=True)
-	fecha_emision = models.DateField (default=date.today)
-	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.SET_NULL, null=True)
+
+	cartaporte    = models.ForeignKey (Cartaporte, on_delete=models.SET_NULL, null=True)
 
 	def get_absolute_url(self):
 		"""Returns the url to access a particular language instance."""
@@ -80,7 +79,6 @@ class Declaracion (models.Model):
 		self.cartaporte = self.getCartaporte (declaracionInfo)
 		self.documento  = declaracionDoc
 		
-	
 	def getCartaporte (self, declaracionInfo):
 		numero = None
 		try:

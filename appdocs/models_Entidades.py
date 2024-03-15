@@ -9,7 +9,7 @@ from django.urls import reverse  # To generate URLS by reversing URL patterns
 # Model Empresa
 #--------------------------------------------------------------------
 class Empresa (models.Model):
-	numeroId     = models.CharField (max_length=50)
+	numeroId     = models.CharField (max_length=30)
 	nombre       = models.CharField (max_length=50)
 	direccion    = models.CharField (max_length=100)
 	ciudad       = models.CharField (max_length=50)

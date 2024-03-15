@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -5,9 +7,15 @@ from django.views import generic
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.urls import reverse  # To generate URLS by reversing URL patterns
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.templatetags.static import static
+from django.conf import settings
+
+from django.contrib import messages
+from django.contrib.messages import add_message
 
 from .models_CartaporteDoc import Cartaporte, CartaporteDoc
 from .models_ManifiestoDoc import Manifiesto, ManifiestoDoc
@@ -24,6 +32,7 @@ def index(request):
 	num_vehiculos = Vehiculo.objects.all().count()
 	num_cartaportes = Cartaporte.objects.all().count()
 	num_manifestos = Manifiesto.objects.all().count()
+	release        = getRelease ()
 	
 	
 	# Number of visits to this view, as counted in the session variable.
@@ -32,14 +41,21 @@ def index(request):
 
 	# Renderiza la plantilla HTML index.html con los datos en la variable contexto
 	return render( request, 'index.html',
-		context={'num_empresas':num_empresas,
+		context={'release': release,
+		         'num_empresas':num_empresas,
 				 'num_conductors':num_conductors,
 				 'num_vehiculos':num_vehiculos,
 				 'num_cartaportes':num_cartaportes, 
 				 'num_manifiestos':num_manifestos,
 				 'num_visits': num_visits
-				 },
-	)
+				 })
+
+def getRelease ():
+	infoFile = settings.STATIC_ROOT + "/appdocs/json/ecuapassdocs-info.json"
+	with open (infoFile) as fp:
+		info = json.load (fp)
+	return info ["release"]
+	
 
 # Decorador personalizado para requerir autenticación en una vista basada en clase
 def login_required_class(view_func):
@@ -146,6 +162,30 @@ class CartaporteDelete(login_required_class(DeleteView)):
 	model = Cartaporte
 	success_url = reverse_lazy('cartaportes')
 
+#	def post (self, request, *args, **kwargs):
+#		print ("-- On post...")
+#		# Delete related objects or one-to-one relationships here
+#		# Get the object to be deleted
+#		self.object = self.get_object()		
+#		self.object.documento.delete()
+#
+#		add_message (request, messages.ERROR, "Cartaporte borrada.")
+#		#return return (request, 'messages.html')
+#		return reverse('cartaportes', args=[])
+#		#return reverse('empresa-detail', args=[str(self.id)])
+#
+	def delete(self, request, *args, **kwargs):
+		print ("-- On delete...")
+		# Delete related objects
+		related_objects = self.object.related_objects.all()
+		for obj in related_objects:
+			print ("--obj:", obj)
+
+		related_objects.delete()
+
+		# Delete the object using the default behavior
+		return super().delete(request, *args, **kwargs)
+
 #--------------------------------------------------------------------
 #-- Manifiesto
 #--------------------------------------------------------------------
@@ -157,7 +197,7 @@ class ManifiestoUpdate(login_required_class(UpdateView)):
 	model = Manifiesto
 	fields = ['vehiculo', 'cartaporte']
 
-class ManifiestoDelete(login_required_class(DeleteView)):
+class ManifiestoDelete (login_required_class(DeleteView)):
 	model = Manifiesto
 	success_url = reverse_lazy('manifiestos')
 

@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 # Own imports
-from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
+from ecuapassdocs.info.resourceloader import ResourceLoader 
 from .views_EcuapassDocView import EcuapassDocView
 from .models import Vehiculo, Conductor
 

@@ -3,7 +3,7 @@ import re
 from datetime import date
 
 # Own imports
-from ecuapassdocs.ecuapassinfo.resourceloader import ResourceLoader 
+from ecuapassdocs.info.resourceloader import ResourceLoader 
 from .views_EcuapassDocView import EcuapassDocView
 
 #--------------------------------------------------------------------
@@ -57,7 +57,7 @@ class CartaporteDocView (EcuapassDocView):
 #	@method_decorator(csrf_protect)
 #	def get (self, request, *args, **kwargs):
 #		query = request.GET.get('query', '')
-#		ciudadesPaises = ResourceLoader.loadText ("data-cartaportes", "ciudades-paises-colombia-ecuador.txt")
+#		ciudadesPaises = ResourceLoader.loadText ("data_cartaportes", "ciudades-paises-colombia-ecuador.txt")
 #		ciudadesPaises = [x.upper().strip() for x in ciudadesPaises if x.upper().startswith (query)]
 #
 #		itemOptions = []

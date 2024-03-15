@@ -18,6 +18,6 @@
 	</p>
 
 
-	<button><a href="{% url 'declaracion-update' declaracion.id %}">Editar</a></button>
+	<button> <a href="{% url 'declaracion' %}{{ declaracion.id }}" target="_blank">Editar</a></button>
 	<button><a href="{% url 'declaracion-delete' declaracion.id %}">Eliminar</a></button>
 {% endblock %}

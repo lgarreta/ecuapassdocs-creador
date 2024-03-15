@@ -4,17 +4,19 @@ from datetime import date
 from django.db import models
 from django.urls import reverse  # To generate URLS by reversing URL patterns
 
-from ecuapassdocs.ecuapassinfo.ecuapass_utils import Utils
-from ecuapassdocs.ecuapassinfo.ecuapass_info_cartaporte_BYZA import CartaporteByza
+from ecuapassdocs.info.ecuapass_utils import Utils
+from ecuapassdocs.info.ecuapass_info_cartaporte_BYZA import CartaporteByza
 
 from appusuarios.models import UsuarioEcuapass
 from appdocs.models_Entidades import Empresa
+from appdocs.models_EcuapassDoc import EcuapassDoc
 
 #--------------------------------------------------------------------
 # Model CartaporteDoc
 #--------------------------------------------------------------------
 class CartaporteDoc (models.Model):
 	numero = models.CharField (max_length=20)
+
 	txt0a = models.CharField (max_length=20, null=True)
 	txt00 = models.CharField (max_length=20, null=True)
 	txt01 = models.CharField (max_length=200, null=True)
@@ -55,16 +57,13 @@ class CartaporteDoc (models.Model):
 	#-------------------------------------------------------
 	txt18 = models.CharField (max_length=200, null=True)
 	txt19 = models.CharField (max_length=50, null=True)
-	txt20 = models.CharField (max_length=200, null=True)
 	txt21 = models.CharField (max_length=200, null=True)
-	txt22 = models.CharField (max_length=200, null=True)
-	txt23 = models.CharField (max_length=200, null=True)
+	txt22 = models.CharField (max_length=260, null=True)
 	txt24 = models.CharField (max_length=200, null=True)
 
 #	def get_absolute_url(self):
 #		"""Returns the url to access a particular language instance."""
 #		#return reverse('empresa-detail', args=[str(self.id)])
-
 
 	def __str__ (self):
 		return f"{self.numero}, {self.txt02}, {self.txt03}"
@@ -77,12 +76,8 @@ class CartaporteDoc (models.Model):
 #--------------------------------------------------------------------
 # Model Cartaporte
 #--------------------------------------------------------------------
-class Cartaporte (models.Model):
-	numero        = models.CharField (max_length=20)
-	documento     = models.OneToOneField (CartaporteDoc, on_delete=models.SET_NULL, null=True)
-	fecha_emision = models.DateField (default=date.today)
-	procedimiento = models.CharField (max_length=30)
-	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.SET_NULL, null=True)
+class Cartaporte (EcuapassDoc):
+	documento     = models.OneToOneField (CartaporteDoc, on_delete=models.CASCADE)
 
 	remitente     = models.ForeignKey (Empresa, on_delete=models.SET_NULL, null=True)
 
@@ -90,14 +85,12 @@ class Cartaporte (models.Model):
 		"""Returns the url to access a particular language instance."""
 		return reverse('cartaporte-detail', args=[str(self.id)])
 
-	def __str__ (self):
-		return f"{self.numero}, {self.fecha_emision}"
-
 	def setValues (self, cartaporteDoc, fieldValues):
 		self.numero     = cartaporteDoc.numero
 		self.documento  = cartaporteDoc
 		self.remitente  = self.getRemitente (fieldValues)
 		
+	## Only working for BYZA
 	def getRemitente (self, fieldValues):
 		try:
 			jsonFieldsPath, runningDir = self.createTemporalJson (fieldValues)
@@ -105,6 +98,8 @@ class Cartaporte (models.Model):
 			info              = cartaporteInfo.getSubjectInfo ("02_Remitente")
 
 			if any (value is None for value in info.values()):
+				return None
+			elif any ("||LOW" in value for value in info.values()):
 				return None
 			else:
 				empresa, created = Empresa.objects.get_or_create (numeroId=info['numeroId'])
@@ -119,7 +114,7 @@ class Cartaporte (models.Model):
 				empresa.save ()
 				return empresa
 		except:
-			Utils.printException (f"Obteniedo info del remitente en el texto")
+			Utils.printException (f"Obteniedo datos del remitente en la info: ", str (info))
 			return None
 
 	def createTemporalJson (self, fieldValues):
@@ -128,4 +123,4 @@ class Cartaporte (models.Model):
 		json.dump (fieldValues, open (jsonFieldsPath, "w"))
 		return (jsonFieldsPath, tmpPath)
  
-	
+

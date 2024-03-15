@@ -4,7 +4,7 @@
 	<h1>Manifiesto: {{ manifiesto.numero }}</h1>
 
 	<p><strong>Documento:</strong> 
-		<a href="{% url 'manifiesto' %}{{ manifiesto.id }}" target="_blanck">{{ manifiesto.numero }}</a>
+		<a href="{% url 'manifiesto' %}{{ manifiesto.id }}" target="_blank">{{ manifiesto.numero }}</a>
 	</p>
 
 	<p><strong>Fecha de emisión:</strong> {{ manifiesto.fecha_emision }}</p>
@@ -17,7 +17,6 @@
 		<a href="{{ manifiesto.vehiculo.get_absolute_url }}"> {{ manifiesto.vehiculo }}</a>
 	</p>
 
-
-	<button><a href="{% url 'manifiesto-update' manifiesto.id %}">Editar</a></button>
+	<button> <a href="{% url 'manifiesto' %}{{ manifiesto.id }}" target="_blank">Editar</a></button>
 	<button><a href="{% url 'manifiesto-delete' manifiesto.id %}">Eliminar</a></button>
 {% endblock %}

@@ -12,17 +12,17 @@
 		<a href="{{ cartaporte.remitente.get_absolute_url }}">{{ cartaporte.remitente }}</a>
 	</p> 
 
-	<button><a href="{% url 'cartaporte-update' cartaporte.id %}">Editar</a></button>
-	<button><a href="{% url 'cartaporte-delete' cartaporte.id %}">Eliminar</a></button>
+	<button> <a href="{% url 'cartaporte' %}{{ cartaporte.id }}" target="_blank">Editar</a></button>
+	<button> <a href="{% url 'cartaporte-delete' cartaporte.id %}">Eliminar</a></button>
 
 	<hr>
 	<div style="margin-left:20px;margin-top:20px">
 		<h4>Lista de Manifiestos</h4>
 
 		{% for manifiesto in cartaporte.manifiesto_set.all %}
-			<p>
-        	<a href="{{ manifiesto.get_absolute_url }}">{{ manifiesto.numero }}</a> ({{manifiesto.fecha_emision}})
-			</p>
+			<li>
+        		<a href="{{ manifiesto.get_absolute_url }}"  target="_blank">{{ manifiesto.numero }}</a> ({{manifiesto.fecha_emision}})
+      		</li>
 		{% endfor %}
 	</div>
 {% endblock %}

@@ -35,7 +35,7 @@ function createAutocomplete (entity) {
 function getTextAreasByClassName (className) {
 	let selectedTextAreas = []
 	textAreas.forEach (textArea => {
-		if (textArea.className.includes (className)) {
+		if (textArea.className === className) {
 			selectedTextAreas.push (textArea)
 		}
 	});
@@ -46,21 +46,24 @@ function getTextAreasByClassName (className) {
 // Doc types: "cartaporte", "manifiesto", "declaración
 function setAutocompleteForDocument (documentType) {
 	console.log ("-- Autocomplete...")
-	if (documentType == "cartaporte" || documentType == "declaracion") {
 		// Empresas
 		let empresaInputs = getTextAreasByClassName ("input_empresa")
 		empresaInputs.forEach (inputName => {
 			createAutocomplete(new AutoComplete (inputName, 'opciones-empresa')) 
 		});
 	
-		let lugarInputs = getTextAreasByClassName ("input_lugar")
+		// Ciudad-Pais. Fecha
+		let inputsLugarFecha = getTextAreasByClassName ("input-lugar-fecha")
+		inputsLugarFecha.forEach (inputName => {
+			createAutocomplete(new AutoComplete (inputName, 'opciones-lugar-fecha' )) 
+		});
 
-		lugarInputs.forEach (inputName => {
+		// Ciudad-Pais
+		let inputsLugar = getTextAreasByClassName ("input_lugar")
+		inputsLugar.forEach (inputName => {
 			createAutocomplete(new AutoComplete (inputName, 'opciones-lugar' )) 
 		});
-	}
 
-	if (documentType == "manifiesto" || documentType == "declaracion") {
 		// Cartaportes
 		let cartaporteInputs = getTextAreasByClassName ("input_cartaporte")
 		cartaporteInputs.forEach (inputName => {
@@ -78,14 +81,15 @@ function setAutocompleteForDocument (documentType) {
 		conductorInputs.forEach (inputName => {
 			createAutocomplete(new AutoCompleteConductor (inputName, 'opciones-conductor')) 
 		});
-	}
 }
 
 //----------------------------------------------------------------------
 //---------------- Autocomplet for "cartaporte" ------------------------
 //----------------------------------------------------------------------
+
+//-- General class for autocomplete only with the value of the option
 class AutoComplete {
-	// Init with input element and source URL
+	// Init with input element and source URL which is handles in views
 	constructor (inputSelector, sourceUrl, documentType=null) {
 		console.log ("-- on constructor --");
 		let inputId        = "#" + inputSelector
@@ -113,7 +117,9 @@ class AutoComplete {
 	}
 }
 
-//-- Autocomplet for "cartaporte" ------------------------
+//-------------------------------------------------------------------
+//-- Autocomplet for "cartaporte" -----------------------------------
+//-------------------------------------------------------------------
 class AutoCompleteCartaporte extends AutoComplete {
 	// When an item is selected, populate the textarea 
 	onItemSelected (ui) {
@@ -138,18 +144,6 @@ class AutoCompleteCartaporte extends AutoComplete {
 			let txtId = "txt" + docInputsIds [i]
 			document.getElementById (txtId).value = values [i]
 		}
-
-//		document.getElementById("txt28").value   = values [0]  // Cartaporte
-//		document.getElementById("txt29").value   = values [1]  // Descripcion
-//		document.getElementById("txt30").value   = values [2]  // Cantidad
-//		document.getElementById("txt31").value   = values [3]  // Marca
-//		document.getElementById("txt32_1").value = values [4]  // Peso bruto
-//		document.getElementById("txt32_3").value = values [5]  // Peso neto
-//		document.getElementById("txt33_1").value = values [6]  // Otra medida
-//		document.getElementById("txt34").value   = values [7]  // INCONTERMS
-//		document.getElementById("txt32_2").value = values [8]  // Peso bruto total. NO CALCULADO
-//		document.getElementById("txt32_4").value = values [9]  // Peso neto total. NO CALCULADO
-//		document.getElementById("txt33_2").value = values [10] // Otra medida total. NO CALCULADO
 	}
 }
 

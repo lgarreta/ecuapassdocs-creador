@@ -4,12 +4,16 @@ from datetime import date
 from django.db import models
 from django.urls import reverse  # To generate URLS by reversing URL patterns
 
-from ecuapassdocs.ecuapassinfo.ecuapass_utils import Utils
-from ecuapassdocs.ecuapassinfo.ecuapass_info_manifiesto_BYZA import ManifiestoByza
+from ecuapassdocs.info.ecuapass_utils import Utils
+from ecuapassdocs.info.ecuapass_info_manifiesto_BYZA import ManifiestoByza
 
-from .models_CartaporteDoc import Cartaporte
+from appdocs.models import EcuapassDoc, Cartaporte
+#from appdocs.models_CartaporteDoc import Cartaporte
+#from appdocs.models_EcuapassDoc import EcuapassDoc
+
 from appusuarios.models import UsuarioEcuapass
 from appdocs.models_Entidades import Vehiculo
+from appdocs.models_EcuapassDoc import EcuapassDoc
 
 #--------------------------------------------------------------------
 # Model ManifiestoDoc
@@ -65,10 +69,8 @@ class ManifiestoDoc (models.Model):
 	txt34 = models.CharField (max_length=200, null=True)    # INCOTERMS
 	#------------------------------------------------------------
 	txt35 = models.CharField (max_length=200, null=True)
-	txt36 = models.CharField (max_length=200, null=True)
 	txt37 = models.CharField (max_length=200, null=True)
 	txt38 = models.CharField (max_length=200, null=True)
-	txt39 = models.CharField (max_length=200, null=True)
 	txt40 = models.CharField (max_length=200, null=True)
 
 	def __str__ (self):
@@ -77,22 +79,15 @@ class ManifiestoDoc (models.Model):
 #--------------------------------------------------------------------
 # Model Manifiesto
 #--------------------------------------------------------------------
-class Manifiesto (models.Model):
-	numero        = models.CharField (max_length=20)
+class Manifiesto (EcuapassDoc):
+	documento     = models.OneToOneField (ManifiestoDoc, on_delete=models.CASCADE)
+
 	vehiculo      = models.ForeignKey (Vehiculo, on_delete=models.SET_NULL, related_name='vehiculo', null=True)
 	cartaporte    = models.ForeignKey (Cartaporte, on_delete=models.SET_NULL, null=True)
-
-	documento     = models.OneToOneField (ManifiestoDoc, on_delete=models.SET_NULL, null=True)
-	fecha_emision = models.DateField (default=date.today)
-	procedimiento = models.CharField (max_length=30)
-	usuario       = models.ForeignKey (UsuarioEcuapass, on_delete=models.SET_NULL, null=True)
 
 	def get_absolute_url(self):
 		"""Returns the url to access a particular language instance."""
 		return reverse('manifiesto-detail', args=[str(self.id)])
-
-	def __str__ (self):
-		return f"{self.numero}, {self.vehiculo}"
 
 	def setValues (self, manifiestoDoc, fieldValues):
 		jsonFieldsPath, runningDir = self.createTemporalJson (fieldValues)
@@ -104,19 +99,17 @@ class Manifiesto (models.Model):
 		self.cartaporte = self.getCartaporte (manifiestoInfo)
 		self.documento  = manifiestoDoc
 		
-	
 	def getCartaporte (self, manifiestoInfo):
 		numeroCartaporte = None
 		try:
-			numeroCartaporte = manifiestoInfo.getNumeroCPIC ()
+			numeroCartaporte = manifiestoInfo.getNumeroCartaporte ()
 			record = Cartaporte.objects.get (numero=numeroCartaporte)
 			return record
 		except: 
-			Utils.printException ("Excepcion in getCartaporte")
-			Utils.printException (f"Exepcion: Cartaporte número '{numeroCartaporte}' no encontrado.")
+			print (f"ALERTA: Cartaporte número '{numeroCartaporte}' no encontrado.")
+			#Utils.printException (f"Exepcion: Cartaporte número '{numeroCartaporte}' no encontrado.")
 		return None
 
-		
 	def getVehiculo (self, manifiestoInfo, vehicleType):
 		try:
 			info = manifiestoInfo.getVehiculoRemolqueInfo (vehicleType)
