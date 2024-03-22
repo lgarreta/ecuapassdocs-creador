@@ -18,7 +18,7 @@ from .models import Vehiculo, Conductor
 #--------------------------------------------------------------------
 class DeclaracionDocView (EcuapassDocView):
 	document_type    = "declaracion"
-	template_name    = "doc_forma_declaracion.html"
+	template_name    = "forma_documento.html"
 	background_image = "appdocs/images/image-declaracion-vacia-NTA.png"
 	parameters_file  = "declaracion_input_parameters.json"
 

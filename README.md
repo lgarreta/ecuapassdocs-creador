@@ -4,8 +4,10 @@
 - Custom user management
 
 ## LOG
+22/03: r0.730. Removed autosave. Fixed max chars for obs.
+16/03: r0.721. Added autosave. Removed preliminar button. One form template for all documents.
 15/03: r0.720. Modified links to open in new tabs. Improved DB scrips for load data to DB.
-04/03: r0.712. Transformig doc models to derived from base class. Creating scrips for inserting PDFs"
+04/03: r0.712. Transformig doc models to derived from base class. Creating scrips for inserting PDFs
 01/03: r0.711. Creating scripts for inserting documents from PDFs into DB. 
 28/02: r0.710. Fixed Cartaporte PDF/PNG and inputs.
 28/02: Added scripts for database inicialization

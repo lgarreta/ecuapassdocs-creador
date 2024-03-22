@@ -2,17 +2,16 @@
 {% load static %}
 
 <head>
-	{% block title %}Declaración{% endblock %}
+	{% block title %}Manifiesto{% endblock %}
 </head>
 
 {% block content %}
 	<div id="background"></div>
-		<form action="{% url 'declaracion' %}" method="post" id="forma_pdf" target="_blank">
+		<form action="{% url 'manifiesto' %}" method="post" id="forma_pdf" target="_blank">
 			<div class="container">
 				{% csrf_token %}
 				<!-- Panel superior que muestra cuatro opciones para realizar con el documento -->
 				<div class="top-panel">
-					<button type="submit" id="pdf_preliminar_btn" name="action" value="preliminar">PDF preliminar</button>
 					<button type="submit" id="pdf_original_btn"  name="action" value="original">PDF original</button>
 					<button type="submit" id="pdf_copia_btn" name="action" value="copia">PDF copia</button>
 					<button type="submit" id="pdf_clonar_btn" name="action" value="clonar">Clonar</button>
@@ -25,6 +24,7 @@
 			</div>
 		</form>
 	</div>
+
 	<script>
 	</script>
 {% endblock %}

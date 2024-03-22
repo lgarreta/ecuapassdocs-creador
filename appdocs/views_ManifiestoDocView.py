@@ -23,7 +23,7 @@ from .models import Cartaporte, CartaporteDoc, Manifiesto, Vehiculo, Conductor
 #--------------------------------------------------------------------
 class ManifiestoDocView (EcuapassDocView):
 	document_type    = "manifiesto"
-	template_name    = "doc_forma_manifiesto.html"
+	template_name    = "forma_documento.html"
 	background_image = "appdocs/images/image-manifiesto-vacio-NTA-BYZA.png"
 	parameters_file  = "manifiesto_input_parameters.json"
 

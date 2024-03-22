@@ -1,0 +1,129 @@
+{
+    "00_Pais": {
+        "content": "CO",
+        "value": "CO"
+    },
+    "00b_Numero": {
+        "content": "CO6864",
+        "value": "CO6864"
+    },
+    "01_Transportista": {
+        "content": "Byza soluciones que facilitan tuvida CRA 1 No 1-15 AV PANAMERICANA TEL (092)7250934 FAX: NIT: 900.168.467-2\r\n(092)7251311 Ipiales - Colombia",
+        "value": "Byza soluciones que facilitan tuvida CRA 1 No 1-15 AV PANAMERICANA TEL (092)7250934 FAX: NIT: 900.168.467-2\r\n(092)7251311 Ipiales - Colombia"
+    },
+    "02_Remitente": {
+        "content": "CFC CAFARCOL SAS\r\nKM 1.7 VIA SIBERIA PARQUE IND GERFOR BOD, 7\r\nCOTA - COLOMBIA NIT: 860047379",
+        "value": "CFC CAFARCOL SAS\r\nKM 1.7 VIA SIBERIA PARQUE IND GERFOR BOD, 7\r\nCOTA - COLOMBIA NIT: 860047379"
+    },
+    "03_Destinatario": {
+        "content": "NAVCATRADING CORP S.A.\r\nGONZALO ZALDUMBIDE N48 120 APARICIO RIVA ADENEIRA\r\nQUITO - ECUADOR RUC: 1791728637001",
+        "value": "NAVCATRADING CORP S.A.\r\nGONZALO ZALDUMBIDE N48 120 APARICIO RIVA ADENEIRA\r\nQUITO - ECUADOR RUC: 1791728637001"
+    },
+    "04_Consignatario": {
+        "content": "NAVCATRADING CORP S.A.\r\nGONZALO ZALDUMBIDE N48 120 APARICIO RIVA ADENEIRA\r\nQUITO - ECUADOR RUC: 1791728637001",
+        "value": "NAVCATRADING CORP S.A.\r\nGONZALO ZALDUMBIDE N48 120 APARICIO RIVA ADENEIRA\r\nQUITO - ECUADOR RUC: 1791728637001"
+    },
+    "05_Notificado": {
+        "content": "NAVCATRADING CORP S.A.\r\nGONZALO ZALDUMBIDE N48 120 APARICIO RIVA ADENEIRA\r\nQUITO - ECUADOR RUC: 1791728637001",
+        "value": "NAVCATRADING CORP S.A.\r\nGONZALO ZALDUMBIDE N48 120 APARICIO RIVA ADENEIRA\r\nQUITO - ECUADOR RUC: 1791728637001"
+    },
+    "06_Recepcion": {
+        "content": "COTA, BOGOTA - COLOMBIA, NOVIEMBRE 27 DE 2023",
+        "value": "COTA, BOGOTA - COLOMBIA, NOVIEMBRE 27 DE 2023"
+    },
+    "07_Embarque": {
+        "content": "COTA, BOGOTA - COLOMBIA, NOVIEMBRE 27 DE 2023",
+        "value": "COTA, BOGOTA - COLOMBIA, NOVIEMBRE 27 DE 2023"
+    },
+    "08_Entrega": {
+        "content": "TULCAN - ECUADOR",
+        "value": "TULCAN - ECUADOR"
+    },
+    "09_Condiciones": {
+        "content": "DIRECTO SIN CAMBIO DE CAMION / POR COBRAR",
+        "value": "DIRECTO SIN CAMBIO DE CAMION / POR COBRAR"
+    },
+    "10_CantidadClase_Bultos": {
+        "content": "9 PALLETS",
+        "value": "9 PALLETS"
+    },
+    "11_MarcasNumeros_Bultos": {
+        "content": "CFC CAFARCOL\r\nSAS",
+        "value": "CFC CAFARCOL\r\nSAS"
+    },
+    "12_Descripcion_Bultos": {
+        "content": "GOTERO CON PIPETA DE VIDRIO, PERA DE CAUCHO\r\nNATURAL, TAPA EN POLIPROPILENO, TAPA PLASTICA,\r\nINSERTO GOTERO PLASTICO, FRASCOS DE VIDRIO, SET\r\nDE FRASCO DE VIDRIO, PINCEL HA ESMALTERO, TAPA DE\r\nVIDRIO, TAPA METALICA, ENVASES DE VIDRIO\r\nPRENSADO, BOMBA SPRAY, AGRAFE DE ALUMINIO,\r\nPIPETA 48 MM EN VIDRIO. VARIAS REFERENCIAS.\r\nCEC202320340715-0001\r\nByza\r\nsoluciones que facilitan tuvida",
+        "value": "GOTERO CON PIPETA DE VIDRIO, PERA DE CAUCHO\r\nNATURAL, TAPA EN POLIPROPILENO, TAPA PLASTICA,\r\nINSERTO GOTERO PLASTICO, FRASCOS DE VIDRIO, SET\r\nDE FRASCO DE VIDRIO, PINCEL HA ESMALTERO, TAPA DE\r\nVIDRIO, TAPA METALICA, ENVASES DE VIDRIO\r\nPRENSADO, BOMBA SPRAY, AGRAFE DE ALUMINIO,\r\nPIPETA 48 MM EN VIDRIO. VARIAS REFERENCIAS.\r\nCEC202320340715-0001\r\nByza\r\nsoluciones que facilitan tuvida"
+    },
+    "13a_Peso_Neto": {
+        "content": "3899.60",
+        "value": "3899.60"
+    },
+    "13b_Peso_Bruto": {
+        "content": "4554.30",
+        "value": "4554.30"
+    },
+    "14_Volumen": {
+        "content": "",
+        "value": ""
+    },
+    "15_Otras_Unidades": {
+        "content": "",
+        "value": ""
+    },
+    "16_Incoterms": {
+        "content": "CPT: TULCAN - ECUADOR\r\nUSD: 14856.86",
+        "value": "CPT: TULCAN - ECUADOR\r\nUSD: 14856.86"
+    },
+    "17_Gastos": {
+        "value": {
+            "OtrosGastos": {
+                "value": {}
+            },
+            "Seguro": {
+                "value": {
+                    "MontoRemitente": {
+                        "content": "85.00",
+                        "value": "85.00"
+                    }
+                }
+            },
+            "Total": {
+                "value": {
+                    "MontoRemitente": {
+                        "content": "1734.00",
+                        "value": "1734.00"
+                    }
+                }
+            },
+            "ValorFlete": {
+                "value": {
+                    "MontoRemitente": {
+                        "content": "1649.00",
+                        "value": "1649.00"
+                    }
+                }
+            }
+        }
+    },
+    "18_Documentos": {
+        "content": "FACTURA ELECTRONICA DE VENTA NO. CEXP436",
+        "value": "FACTURA ELECTRONICA DE VENTA NO. CEXP436"
+    },
+    "19_Emision": {
+        "content": "COTA, BOGOTA - COLOMBIA, NOVIEMBRE 27 DE 2023",
+        "value": "COTA, BOGOTA - COLOMBIA, NOVIEMBRE 27 DE 2023"
+    },
+    "21_Instrucciones": {
+        "content": "DESCARGAR EN BODEGAS ADUANOR\r\nCODIGO: 9371\r\nTULCAN - ECUADOR",
+        "value": "DESCARGAR EN BODEGAS ADUANOR\r\nCODIGO: 9371\r\nTULCAN - ECUADOR"
+    },
+    "22_Observaciones": {
+        "content": "",
+        "value": ""
+    },
+    "24_OriginalCopia": {
+        "content": "ORIGINAL",
+        "value": "ORIGINAL"
+    }
+}

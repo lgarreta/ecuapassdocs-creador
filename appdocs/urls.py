@@ -80,8 +80,7 @@ urlpatterns = [
     path('declaracion/<pk>/update/', views.DeclaracionUpdate.as_view(), name='declaracion-update'),
     path('declaracion/<pk>/delete/', views.DeclaracionDelete.as_view(), name='declaracion-delete'),
 
-	#-------------------------------------------------------------------
-
+	#-- URLs entities --------------------------------------------------
     path('empresas/', views.EmpresaListView.as_view(), name='empresas'),
     path('empresa/<pk>', views.EmpresaDetailView.as_view(), name='empresa-detail'),
     path('empresa/create/', views.EmpresaCreate.as_view(), name='empresa-create'),
@@ -100,6 +99,7 @@ urlpatterns = [
     path('conductor/<pk>/update/', views.ConductorUpdate.as_view(), name='conductor-update'),
     path('conductor/<pk>/delete/', views.ConductorDelete.as_view(), name='conductor-delete'),
 
+	#-- Other URLs  --------------------------------------------------
     path('info/', InfoView.as_view(), name='info_view'),
 ]
 

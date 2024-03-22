@@ -58,7 +58,7 @@ class CartaporteDoc (models.Model):
 	txt18 = models.CharField (max_length=200, null=True)
 	txt19 = models.CharField (max_length=50, null=True)
 	txt21 = models.CharField (max_length=200, null=True)
-	txt22 = models.CharField (max_length=260, null=True)
+	txt22 = models.CharField (max_length=300, null=True)
 	txt24 = models.CharField (max_length=200, null=True)
 
 #	def get_absolute_url(self):

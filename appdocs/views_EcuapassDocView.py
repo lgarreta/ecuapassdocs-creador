@@ -64,8 +64,10 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		# Send input fields parameters (bounds, maxLines, maxChars, ...)
 		contextDic = {"document_type"	 : self.document_type, 
 					  "input_parameters" : self.inputParameters, 
-					  "background_image" : self.background_image
+					  "background_image" : self.background_image,
+					  "document_url"    : self.document_type
 					 }
+		print ("--self.template_name:", self.template_name)
 		return render (request, self.template_name, contextDic)
 
 	#-------------------------------------------------------------------
@@ -89,10 +91,13 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		pdf_response ['Content-Disposition'] = f'inline; filename="{pdfFilename}"'
 		pdf_response.write (pdfContent)
 
-		if "preliminar" in button_type:
-			return pdf_response
+		print ("-- Button type:", button_type)
+		if "autosave" in button_type:
+			FLAG_SAVE = "GET-ID" if docNumber == "" or docNumber == "CLON" else "SAVE-DATA"
+			docNumber = self.saveDocumentToDB (inputValues, fieldValues, request.user, FLAG_SAVE)
+			return JsonResponse ({'numero': docNumber}, safe=False)
 		elif "original" in button_type:
-			if docNumber == "" or docNumber == "CLON" or docNumber == "PRELIMINAR": 
+			if docNumber == "" or docNumber == "CLON": 
 				docNumber = self.saveDocumentToDB (inputValues, fieldValues, request.user, "GET-ID")
 				return JsonResponse ({'numero': docNumber}, safe=False)
 			else: 
@@ -245,7 +250,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 			documentModel.setValues (documentDoc, fieldValues)
 			documentModel.save ()
 
-			return inputValues
+			return docNumber
 
 	#-------------------------------------------------------------------
 	# Handle assigned documents for "externo" user profile
@@ -268,6 +273,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		user = get_object_or_404 (UsuarioEcuapass, username=username)
 		user.nro_docs_creados += 1	# or any other value you want to increment by
 		user.save()		
+
 	#-------------------------------------------------------------------
 	#-- Create a formated document number ranging from 2000000 
 	#-- Uses "codigo pais" as prefix (for NTA, BYZA)

@@ -1,0 +1,49 @@
+0 : txt0a : 00_Pais
+1 : txt00 : 00b_Numero
+2 : txt01 : 01_Transportista
+
+3 : txt02 : 02_Remitente
+4 : txt03 : 03_Destinatario
+5 : txt04 : 04_Consignatario
+6 : txt05 : 05_Notificado
+7 : txt06 : 06_Recepcion
+8 : txt07 : 07_Embarque
+9 : txt08 : 08_Entrega
+10 : txt09 : 09_Condiciones
+11 : txt10 : 10_CantidadClase_Bultos
+12 : txt11 : 11_MarcasNumeros_Bultos
+13 : txt12 : 12_Descripcion_Bultos
+14 : txt13_1 : 13a_Peso_Neto
+15 : txt13_2 : 13b_Peso_Bruto
+16 : txt14 : 14_Volumen
+17 : txt15 : 15_Otras_Unidades
+18 : txt16 : 16_Incoterms
+
+19 : txt17_11 : 17_Gastos:ValorFlete,MontoRemitente
+23 : txt17_21 : 17_Gastos:ValorFlete,MonedaRemitente
+27 : txt17_31 : 17_Gastos:ValorFlete,MontoDestinatario
+31 : txt17_41 : 17_Gastos:ValorFlete,MonedaDestinatario
+
+
+21 : txt17_13 : 17_Gastos:OtrosGastos,MontoRemitente
+25 : txt17_23 : 17_Gastos:OtrosGastos,MonedaRemitente
+29 : txt17_33 : 17_Gastos:OtrosGastos,MontoDestinatario
+33 : txt17_43 : 17_Gastos:OtrosGastos,MonedaDestinatario
+
+20 : txt17_12 : 17_Gastos:Seguro,MontoRemitente
+24 : txt17_22 : 17_Gastos:Seguro,MonedaRemitente
+28 : txt17_32 : 17_Gastos:Seguro,MontoDestinatario
+32 : txt17_42 : 17_Gastos:Seguro,MonedaDestinatario
+
+22 : txt17_14 : 17_Gastos:Total,MontoRemitente
+26 : txt17_24 : 17_Gastos:Total,MonedaRemitente
+30 : txt17_34 : 17_Gastos:Total,MontoDestinatario
+34 : txt17_44 : 17_Gastos:Total,MonedaDestinatario
+
+35 : txt18 : 18_Documentos
+36 : txt19 : 19_Emision
+37 : txt21 : 21_Instrucciones
+38 : txt22 : 22_Observaciones
+
+
+39 : txt24 : 24_OriginalCopia

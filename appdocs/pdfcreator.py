@@ -42,16 +42,13 @@ class CreadorPDF:
 
 	#----------------------------------------------------------------
 	#-- Crea PDF con otro PDF como background y añade texto sobre este
-	#-- pdfType: "preliminar", "original", "copia", "clon"
+	#-- pdfType: "original", "copia", "clon"
 	#----------------------------------------------------------------
 	def createPdfDocument (self, inputValues, pdfType):
 		pdfType     = pdfType.lower()
 		tmpPath     = tempfile.gettempdir ()
 		copyString  = ""
-		if "preliminar" in pdfType:
-			inputValues ['txt00'] = "PRELIMINAR"
-			copyString = "PRELIMINAR"
-		elif "original" in pdfType:
+		if "original" in pdfType:
 			copyString = "ORIGINAL"
 		elif "copia" in pdfType:
 			copyString = "COPIA"
@@ -139,7 +136,7 @@ class CreadorPDF:
 			value        = inputValues [key]
 			jsonFieldsDic [fieldName] = {"value": value, "content": value}
 
-		embedded_jsonData = json.dumps (jsonFieldsDic)
+		embedded_jsonData = json.dumps (jsonFieldsDic, ensure_ascii=False)
 		pdfCanvas.setFont("Helvetica", 0)  # Set font size to 0 for hidden text
 		pdfCanvas.drawString(100, 150, f"Embedded_jsonData: {embedded_jsonData}")
 
@@ -164,7 +161,7 @@ class CreadorPDF:
 
 		jsonFieldsDic [tableName] = gastosDic
 
-		embedded_jsonData = json.dumps (jsonFieldsDic)
+		embedded_jsonData = json.dumps (jsonFieldsDic, ensure_ascii=False)
 		pdfCanvas.setFont("Helvetica", 0)  # Set font size to 0 for hidden text
 		pdfCanvas.drawString(100, 150, f"Embedded_jsonData: {embedded_jsonData}")
 
