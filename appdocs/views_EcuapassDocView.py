@@ -81,6 +81,8 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		button_type = request.POST.get('boton_pdf', '').lower()
 
 		inputValues = self.getInputValuesFromForm (request)		  # Values without CPI number
+		print ("-- inputValues:")
+		print (inputValues)
 		fieldValues = self.getFieldValuesFromInputs (inputValues)
 		docNumber	= inputValues ["txt00"]
 
@@ -91,27 +93,18 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		pdf_response ['Content-Disposition'] = f'inline; filename="{pdfFilename}"'
 		pdf_response.write (pdfContent)
 
-		print ("-- Button type:", button_type)
 		if "autosave" in button_type:
-			FLAG_SAVE = "GET-ID" if docNumber == "" or docNumber == "CLON" else "SAVE-DATA"
-			docNumber = self.saveDocumentToDB (inputValues, fieldValues, request.user, FLAG_SAVE)
-			return JsonResponse ({'numero': docNumber}, safe=False)
-		elif "original" in button_type:
-			if docNumber == "" or docNumber == "CLON": 
-				docNumber = self.saveDocumentToDB (inputValues, fieldValues, request.user, "GET-ID")
-				return JsonResponse ({'numero': docNumber}, safe=False)
-			else: 
-				self.saveDocumentToDB (inputValues, fieldValues, request.user, "SAVE-DATA")
-				return pdf_response
-		elif "copia" in button_type:
-			if inputValues ["txt00"] != "":		
-				return pdf_response
-			else: 
-				response_data = {'message': "Error: No se ha creado documento original!" }
-				return JsonResponse(response_data, safe=False)
+			docId, docNumber = self.saveDocumentToDB (inputValues, fieldValues, request.user)
+			return JsonResponse ({"id": docId, 'numero': docNumber}, safe=False)
+
+		elif "original" in button_type or "copia" in button_type:
+			self.saveDocumentToDB (inputValues, fieldValues, request.user)
+			return pdf_response
+
 		elif "clonar" in button_type:
-			response_data	   = {'numero': "CLON"}
+			response_data = {'numero': "CLON"}
 			return JsonResponse (response_data, safe=False)
+
 		else:
 			print (">>> Error: No se conoce opción del botón presionado:", button_type)
 
@@ -148,7 +141,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	def getInputValuesFromForm (self, request):
 		inputValues = {}
 		for key in request.POST:
-			if key.startswith ("txt"):
+			if key.startswith ("txt") or key == "id":
 				inputValues [key] = request.POST [key]
 
 		inputValues ["numero"] = inputValues ["txt00"]
@@ -165,8 +158,9 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		inputParameters = ResourceLoader.loadJson ("docs", self.parameters_file)
 		for key, params in inputParameters.items():
 			fieldName	 = params ["field"]
-			value		 = inputValues [key]
-			jsonFieldsDic [fieldName] = {"value": value, "content": value}
+			if fieldName:
+				value		 = inputValues [key]
+				jsonFieldsDic [fieldName] = {"value": value, "content": value}
 
 		return jsonFieldsDic
 
@@ -174,20 +168,22 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-- Set saved or default values to inputs
 	#-------------------------------------------------------------------
 	def setSavedValuesToInputs (self, recordId):
-		docRecord = None
+		instanceDoc = None
 		if (self.document_type == "cartaporte"):
-			docRecord = CartaporteDoc.objects.get (id=recordId)
+			instanceDoc = CartaporteDoc.objects.get (id=recordId)
 		elif (self.document_type == "manifiesto"):
-			docRecord = ManifiestoDoc.objects.get (id=recordId)
+			instanceDoc = ManifiestoDoc.objects.get (id=recordId)
 		elif (self.document_type == "declaracion"):
-			docRecord = DeclaracionDoc.objects.get (id=recordId)
+			instanceDoc = DeclaracionDoc.objects.get (id=recordId)
 		else:
 			print (f"Error: Tipo de documento '{self.document_type}' no soportado")
 			return None
 
 		# Iterating over fields
-		for field in docRecord._meta.fields [2:]:	# Not include "numero" and "id"
-			value = getattr(docRecord, field.name)
+		for field in instanceDoc._meta.fields:	# Not include "numero" and "id"
+			if field.name == "numero":
+				continue
+			value = getattr (instanceDoc, field.name)
 			self.inputParameters [field.name]["value"] = value if value else ""
 
 		return self.inputParameters
@@ -208,7 +204,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	#-- Save document to DB
 	#-------------------------------------------------------------------
-	def saveDocumentToDB (self, inputValues, fieldValues, username, flagSave):
+	def saveDocumentToDB (self, inputValues, fieldValues, username):
 		docClass, modelClass = None, None
 		if self.document_type == "cartaporte":
 			docClass, modelClass = CartaporteDoc, Cartaporte
@@ -219,38 +215,45 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		else:
 			print (f"Error: Tipo de documento '{document_type}' no soportado")
 			sys.exit (0)
-			
+
 		# Create documentDoc and save it to get id
-		if flagSave == "GET-ID":
-			# Save Cartaporte document
+		docNumero = inputValues ["txt00"]
+		if docNumero == "" or docNumero == "CLON":
+			print ("--# Save Cartaporte document")
 			documentDoc = docClass ()
 			documentDoc.save ()
+
+			for key, value in inputValues.items():
+				if key != "id":
+					setattr(documentDoc, key, value)
 			documentDoc.numero = self.getDocumentNumber (inputValues, documentDoc.id)
+			documentDoc.txt00  = documentDoc.numero
 			documentDoc.save ()
-			self.actualizarNroDocumentosCreados (username, self.document_type)
 
 			# Save Initial Cartaporte register
 			documentModel = modelClass (id=documentDoc.id, numero=documentDoc.numero, documento=documentDoc)
 			documentModel.save ()
 
-			return documentDoc.numero
-		elif flagSave == "SAVE-DATA":
-			# Retrieve instance and save Cartaporte document
-			docNumber = inputValues ["txt00"]
-			documentDoc = get_object_or_404 (docClass, numero=docNumber)
+			self.actualizarNroDocumentosCreados (username, self.document_type)
+
+			return documentDoc.id, documentDoc.numero
+		else:
+			print ("--# Retrieve instance and save Cartaporte document")
+			docId     = inputValues ["id"]
+			docNumero = inputValues ["txt00"]
+			documentDoc = get_object_or_404 (docClass, id=docId)
 
 			# Assign values to the attributes using dictionary keys
 			for key, value in inputValues.items():
 				setattr(documentDoc, key, value)
-
 			documentDoc.save ()
 
 			# Retrieve and save Cartaporte register
-			documentModel = get_object_or_404 (modelClass, numero=docNumber)
+			documentModel = get_object_or_404 (modelClass, id=docId)
 			documentModel.setValues (documentDoc, fieldValues)
 			documentModel.save ()
 
-			return docNumber
+			return docId, docNumero
 
 	#-------------------------------------------------------------------
 	# Handle assigned documents for "externo" user profile

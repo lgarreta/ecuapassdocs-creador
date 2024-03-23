@@ -4,6 +4,7 @@
 - Custom user management
 
 ## LOG
+24/03: r0.740. Modified DB save: No GET-ID. Changed html form and views. Added 'id' to forms.
 22/03: r0.730. Removed autosave. Fixed max chars for obs.
 16/03: r0.721. Added autosave. Removed preliminar button. One form template for all documents.
 15/03: r0.720. Modified links to open in new tabs. Improved DB scrips for load data to DB.

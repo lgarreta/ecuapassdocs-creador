@@ -106,7 +106,6 @@
 			padding: 0px;
 			box-sizing: border-box; /* Ensure padding and border are included in the width */
 
-
 		  resize: none; /* "none" disables resizing */
 		  overflow: hidden ; /* Disable scrolling */
 		  white-space: pre-line; /* Wrap and preserve line breaks */
@@ -119,8 +118,6 @@
 		/*****************************************************************************/
 
 	</style>
-		<!-- For PDF -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -154,13 +151,6 @@
 		const inputsContainer = document.querySelector(".container");
 		const textAreas = createInputTextareas (inputsParameters, inputsContainer);
 
-		// Get a first 'stamp' of the for to compare in autosave
-
-
-		// For calculing max chars (obsolete)
-		window.jsPDF = window.jspdf.jsPDF;
-		let pdf = new jsPDF();
-
 		// Set restrictions and styles for each input textarea
 		setParametersToInputs (textAreas, inputsParameters, document_type);
 
@@ -193,9 +183,11 @@
 					},
 
 					success: function (data) { // Handle the response from the server
+						let docId = document.getElementById("id")
 						let docNumberInput = document.getElementById("txt00")
 						if (submitterButton.includes ("autosave")){
 							if (docNumberInput.value == "" || docNumberInput.value == "CLON") {
+								docId.value          = data ["id"]
 								docNumberInput.value = data ["numero"]
 								enableDisableDocButtons ("ENABLE")
 							}

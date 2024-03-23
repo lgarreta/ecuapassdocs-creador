@@ -35,10 +35,13 @@ class CreadorPDF:
 			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'declaracion-vacia-NTA.pdf')
 			self.backgroundImg = ResourceLoader.loadImage ("docs", 'image-declaracion-vacia-NTA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'declaracion_input_parameters.json')
-			self.prefix = "CPI"
+			self.prefix = "DTAI"
 		else:
 			print (f"Error: Tipo de documento '{docType}' no soportado")
 			sys.exit (0)
+
+		# Remove "id" field needed only for access DB
+		self.inputBounds.pop ("id")
 
 	#----------------------------------------------------------------
 	#-- Crea PDF con otro PDF como background y añade texto sobre este
@@ -97,8 +100,8 @@ class CreadorPDF:
 				else:
 					can.setFillColorRGB (0,0,0)
 
-			text         = inputValues [key]
-			textLines    = text.split ("\n")
+			text      = inputValues [key]
+			textLines = text.split ("\n")
 			for i, line in enumerate (textLines):
 				top = pdfBounds[1] - (i+1)*FONTSIZE + i+2
 				if params ["align"] == "right":

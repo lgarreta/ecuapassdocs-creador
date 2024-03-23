@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django import forms
+from django.utils import timezone
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -42,10 +43,14 @@ def cartaportesFilterView (request):
 		fecha_emision = form.cleaned_data.get('fecha_emision')
 		vehiculo	  = form.cleaned_data.get('vehiculo')
 
+
 		if numero:
 			cartaportes = cartaportes.filter (numero__icontains=numero)
 		if fecha_emision:
 			cartaportes = cartaportes.filter (fecha_emision=fecha_emision)
+		else:
+			current_datetime = timezone.now()
+			cartaportes = cartaportes.filter (fecha_emision__lte=current_datetime).order_by ('-fecha_emision')
 		if vehiculo:
 			cartaportes = cartaportes.filter (remitente__icontains=vehiculo)
 
