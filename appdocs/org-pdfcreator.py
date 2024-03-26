@@ -22,19 +22,18 @@ class CreadorPDF:
 	def __init__ (self, docType):
 		self.docType = docType
 		if docType == "manifiesto":
-			self.PdfDocument = ResourceLoader.loadPdf ("docs", 'manifiesto-vacio-NTA-BYZA.pdf')
-			self.ImgDocument = ResourceLoader.loadImage ("docs", 'image-manifiesto-vacio-NTA-BYZA.png')
+			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'manifiesto-vacio-NTA-BYZA.pdf')
+			self.backgroundImg = ResourceLoader.loadImage ("docs", 'image-manifiesto-vacio-NTA-BYZA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'manifiesto_input_parameters.json')
 			self.prefix = "MCI"
 		elif docType == "cartaporte":
-			self.PdfDocument   = ResourceLoader.loadPdf ("docs", 'cartaporte-vacia-SILOG-BYZA.pdf')
-			self.PdfDocument02 = ResourceLoader.loadPdf ("docs", 'cartaporte-contrato-BYZA.pdf')
-			self.ImgDocument   = ResourceLoader.loadImage ("docs", 'image-cartaporte-vacia-SILOG-BYZA.png')
+			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'cartaporte-vacia-SILOG-BYZA.pdf')
+			self.backgroundImg = ResourceLoader.loadImage ("docs", 'image-cartaporte-vacia-SILOG-BYZA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'cartaporte_input_parameters.json')
 			self.prefix = "CPI"
 		elif docType == "declaracion":
-			self.PdfDocument = ResourceLoader.loadPdf ("docs", 'declaracion-vacia-NTA.pdf')
-			self.ImgDocument = ResourceLoader.loadImage ("docs", 'image-declaracion-vacia-NTA.png')
+			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'declaracion-vacia-NTA.pdf')
+			self.backgroundImg = ResourceLoader.loadImage ("docs", 'image-declaracion-vacia-NTA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'declaracion_input_parameters.json')
 			self.prefix = "DTAI"
 		else:
@@ -67,7 +66,7 @@ class CreadorPDF:
 
 		text_pdf, jsonFieldsDic = self.writeInputsToPdf (self.inputBounds, inputValues)
 		json.dump (jsonFieldsDic, open (outJsonPath, "w"), indent=4)
-		self.merge_pdfs (self.PdfDocument, text_pdf, outPdfPath)
+		self.merge_pdfs (self.backgroundPdf, text_pdf, outPdfPath)
 
 		return outPdfPath, outJsonPath
 
@@ -137,7 +136,7 @@ class CreadorPDF:
 		jsonFieldsDic = {}
 		for key, params in inputBounds.items():
 			fieldName    = params ["field"]
-			value        = inputValues [key].replace ("\r\n", "\n")
+			value        = inputValues [key]
 			jsonFieldsDic [fieldName] = {"value": value, "content": value}
 
 		embedded_jsonData = json.dumps (jsonFieldsDic, ensure_ascii=False)
@@ -154,7 +153,7 @@ class CreadorPDF:
 							   "Total":{"value":{}}}}
 		for key, params in inputBounds.items():
 			fieldName    = params ["field"]
-			value        = inputValues [key].replace ("\r\n", "\n")
+			value        = inputValues [key]
 			if "Gastos" in fieldName:
 				res = re.findall ("\w+", fieldName)   #e.g ["ValorFlete", "MontoDestinatario"]
 				tableName, rowName, colName = res [0], res [1], res[2]
@@ -183,8 +182,8 @@ class CreadorPDF:
 			class Pdf: # Bounds for output PDF
 				x, y, width, height = None, None, None, None
 
-			imgSize = self.getImageSize (self.ImgDocument)
-			pdfSize = self.getPdfSize (self.PdfDocument)
+			imgSize = self.getImageSize (self.backgroundImg)
+			pdfSize = self.getPdfSize (self.backgroundPdf)
 
 			pdfWidth, pdfHeight = pdfSize [0], pdfSize [1]
 			imgWidth, imgHeight = imgSize [0], imgSize [1]
@@ -204,25 +203,15 @@ class CreadorPDF:
 			raise
 
 	#----------------------------------------------------------------
-	#-- Merge pdf background image with text and add a second page
+	#-- Merge pdf background image with text
 	#----------------------------------------------------------------
-	def merge_pdfs(self, PdfDocument, text_pdf, outputPdfPath):
+	def merge_pdfs(self, backgroundPdf, text_pdf, outputPdfPath):
 		output_pdf_writer = PdfWriter()
 
-		page0 = PdfDocument.pages [0]
-		page0.merge_page (text_pdf.pages [0])
-		output_pdf_writer.add_page (page0)
-
-		# Add the contract page
-		if (self.docType == "CARTAPORTE"):
-			page1 = PdfDocument.pages [1]
-			output_pdf_writer.add_page (page1)
-
-#		for page_number in range(len (PdfDocument.pages)):
-#			print ("-- page_number:", page_number)
-#			page = PdfDocument.pages [page_number]
-#			page.merge_page(text_pdf.pages [page_number])
-#			output_pdf_writer.add_page(page)
+		for page_number in range(len (backgroundPdf.pages)):
+			page = backgroundPdf.pages [page_number]
+			page.merge_page(text_pdf.pages [page_number])
+			output_pdf_writer.add_page(page)
 
 		with open(outputPdfPath, 'wb') as output_pdf:
 			output_pdf_writer.write(output_pdf)
