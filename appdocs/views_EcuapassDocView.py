@@ -101,7 +101,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 
 		# Create single PDF for main and child documents (Cartaporte + Manifiestos)
 		elif "paquete" in button_type:
-			pdf_response = self.createResponseForMultiDocument (inputValues, button_type)
+			pdf_response = self.createResponseForMultiDocument (inputValues)
 			return pdf_response
 
 		elif "clonar" in button_type:
@@ -114,7 +114,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	# Create PDF for 'Cartaporte' plus its 'Manifiestos'
 	#-------------------------------------------------------------------
-	def createResponseForMultiDocument (self, inputValues, button_type):
+	def createResponseForMultiDocument (self, inputValues):
 		creadorPDF = CreadorPDF (self.document_type)
 
 		# Get inputValues for Cartaporte childs
@@ -124,7 +124,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 		docTypesList          = [self.document_type] + typesList
 
 		# Call PDFCreator 
-		outPdfPath = creadorPDF.createMultiPdf (inputValuesList, docTypesList, button_type)
+		outPdfPath = creadorPDF.createMultiPdf (inputValuesList, docTypesList)
 
 		# Respond with the output PDF
 		with open(outPdfPath, 'rb') as pdf_file:
@@ -149,9 +149,11 @@ class EcuapassDocView (LoginRequiredMixin, View):
 			for reg in regsManifiestos:
 				docManifiesto  = ManifiestoDoc.objects.get (id=reg.id)
 				inputValues = model_to_dict (docManifiesto)
+				inputValues ["txt41"] = "COPIA"
+
 				outInputValuesList.append (inputValues)
 				outDocTypesList.append ("MANIFIESTO")
-		except modelClass.DoesNotExist:
+		except regCartaporte.DoesNotExist:
 			print (f"'No existe {docType}' con id '{id}'")
 
 		return outInputValuesList, outDocTypesList
@@ -275,67 +277,66 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	def saveDocumentToDB (self, inputValues, fieldValues, username):
 		print (">> Guardando documento...")
-		docClass, modelClass = self.getDocumentAndModelClass (self.document_type)
+		DocModel, RegModel = self.getDocumentAndRegisterClass (self.document_type)
 
-		# Create documentDoc and save it to get id
+		# Create docModel and save it to get id
 		docNumber = inputValues ["numero"]
 		if docNumber == "" or docNumber == "CLON":
 			print (">>> Creación de documento nuevo en la BD...")
-			documentDoc = docClass ()
-			documentDoc.save ()
+			docModel = self.getValidDocModel (inputValues, DocModel)
+			if not docModel:
+				return None, None
 
-			# Set values from for to document
+			# Set document values from form values
 			for key, value in inputValues.items():
-				if key != "id":
-					setattr(documentDoc, key, value)
-
-			# Save initial document form
-			documentDoc.numero = self.getDocumentNumber (inputValues, documentDoc.id)
-			if documentDoc.txt00:
-				documentDoc.numero = documentDoc.txt00
-			documentDoc.save ()
+				if key not in ["id", "numero"]:
+					setattr(docModel, key, value)
+			docModel.txt00 = docModel.numero
+			docModel.save ()
 
 			# Save initial document register
-			documentModel = modelClass (id=documentDoc.id, numero=documentDoc.numero, documento=documentDoc)
-			documentModel.save ()
+			regModel = RegModel (id=docModel.id, numero=docModel.numero, documento=docModel)
+			regModel.save ()
 
+			# Update user quota
 			self.actualizarNroDocumentosCreados (username, self.document_type)
 
-			return documentDoc.id, documentDoc.numero
+			return docModel.id, docModel.numero
 		else:
 			print (">>> Documento existente en la BD: actualización...")
 			docId     = inputValues ["id"]
 			docNumber = inputValues ["numero"]
-			documentDoc = get_object_or_404 (docClass, id=docId)
+			docModel = get_object_or_404 (DocModel, id=docId)
 
-			# Assign values to the attributes using dictionary keys
+			# Assign values to docModel from form values
 			for key, value in inputValues.items():
-				setattr(documentDoc, key, value)
-			documentDoc.save ()
+				setattr(docModel, key, value)
+			docModel.numero = inputValues ["txt00"]
+			docModel.save ()
 
 			# Retrieve and save Cartaporte register
-			documentModel = get_object_or_404 (modelClass, id=docId)
-			documentModel.setValues (documentDoc, fieldValues)
-			documentModel.save ()
+			regModel = get_object_or_404 (RegModel, id=docId)
+			regModel.setValues (docModel, fieldValues)
+			regModel.save ()
 
 			return docId, docNumber
 
 	#-------------------------------------------------------------------
-	# Return form document class and model class from document type
+	# Return form document class and register class from document type
 	#-------------------------------------------------------------------
-	def getDocumentAndModelClass (self, document_type):
-		docClass, modelClass = None, None
+	def getDocumentAndRegisterClass (self, document_type):
+		DocModel, RegModel = None, None
 		if document_type == "cartaporte":
-			docClass, modelClass = CartaporteDoc, Cartaporte
+			DocModel, RegModel = CartaporteDoc, Cartaporte
 		elif document_type == "manifiesto":
-			docClass, modelClass = ManifiestoDoc, Manifiesto
+			DocModel, RegModel = ManifiestoDoc, Manifiesto
 		elif document_type == "declaracion":
-			docClass, modelClass = DeclaracionDoc, Declaracion 
+			DocModel, RegModel = DeclaracionDoc, Declaracion 
 		else:
 			print (f"Error: Tipo de documento '{document_type}' no soportado")
 			sys.exit (0)
 
-		return docClass, modelClass
+		return DocModel, RegModel
 
 	#-------------------------------------------------------------------
 	# Handle assigned documents for "externo" user profile
@@ -363,8 +364,52 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-- Create a formated document number ranging from 2000000 
 	#-- Uses "codigo pais" as prefix (for NTA, BYZA)
 	#-------------------------------------------------------------------
-	def getDocumentNumber (self, inputValues, id):
-		codigoPais = inputValues ["txt0a"]
-		numero = f"{codigoPais}{2000000 + id}"
-		return (numero)
+
+	def getValidDocModel (self, inputValues, DocModel):
+		docModel  = None
+		docNumber = inputValues ["txt00"]
+
+		if docNumber and docNumber != "CLON":           # Assigned by user
+			if not DocModel.objects.filter (numero=docNumber).first():
+				docModel = DocModel ()
+				docModel.numero = docNumber
+				docModel.txt00 = docModel.numero
+			else:
+				print (f"ERROR: Ya existe número de documento '{docNumber}'")
+				return None
+		else:                # Assigned by system
+			codigoPais = inputValues ["txt0a"]
+			while True:
+				docModel  = DocModel ()
+				docModel.save ()
+				docNumber = f"{codigoPais}{2000000 + docModel.id}"
+				if not DocModel.objects.filter (numero=docNumber).first():
+					docModel.numero = docNumber
+					docModel.txt00 = docModel.numero
+					break
+				else:
+					docModel.delete ()
+		
+		return docModel
+
+	def getValidDocumentNumber (self, inputValues, DocModel, id, numero):
+		outDocNumber = None
+		
+		if numero:           # Assigned by user
+			outDocNumber = numero
+		else:                # Assigned by system
+			codigoPais = inputValues ["txt0a"]
+			while True:
+				outDocNumber = f"{codigoPais}{2000000 + id}"
+				if DocModel.objects.filter (numero=outDocNumber).first():
+					lastDoc = DocModel.objects.get (id=id)
+					lastDoc.delete()
+
+
+		# Check if exists a previous register with that number
+		doc = DocModel.objects.filter (numero=outDocNumber).first()
+		if doc: 
+			outDocNumber = None
+
+		return outDocNumber
 

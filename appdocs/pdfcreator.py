@@ -48,15 +48,15 @@ class CreadorPDF:
 		# Remove "id" field needed only for access DB
 		self.inputParameters.pop ("id")
 		self.inputParameters.pop ("numero")
-		self.inputParameters.popitem ()      # OriginalCopia
+		#self.inputParameters.popitem ()      # OriginalCopia
 
 	#----------------------------------------------------------------
 	#----------------------------------------------------------------
-	def createMultiPdf (self, values, types, pdfType):
+	def createMultiPdf (self, values, types):
 		pdf_list = []
 		docNumber = None
 		for i, (inputValues, docType) in enumerate (zip (values, types)):
-			outPdfPath, outJsonPath = self.createPdfDocument (inputValues, docType, pdfType)
+			outPdfPath, outJsonPath = self.createPdfDocument (inputValues, docType, "COPIA")
 			pdf_list.append (outPdfPath)
 
 			if i == 0:
@@ -77,20 +77,9 @@ class CreadorPDF:
 			with open(filename, 'rb') as pdf_file:
 				reader = PdfReader(pdf_file)
 				merger.append (reader)
-#				# Add each page from the PDFs to the merger object
-#				for page_num in range(len(reader.pages)):
-#					merger.append(reader.pages[page_num])
-
 		# Write the merged content to a new PDF file
 		with open (outPdfPath, 'wb') as output_file:
 			merger.write(output_file)
-
-#		# Example usage
-#		pdf_files = [os.path.join("path", "to", "pdf1.pdf"), os.path.join("path", "to", "pdf2.pdf")]
-#		output_file = "merged_pdf.pdf"
-#		merge_pdfs(pdf_files, output_file)
-#
-#		print(f"PDFs merged successfully! Output: {output_file}")
 
 	#----------------------------------------------------------------
 	#-- Crea PDF con otro PDF como background y añade texto sobre este
@@ -270,12 +259,6 @@ class CreadorPDF:
 		if (self.docType == "CARTAPORTE"):
 			page1 = PdfDocument.pages [1]
 			output_pdf_writer.add_page (page1)
-
-#		for page_number in range(len (PdfDocument.pages)):
-#			print ("-- page_number:", page_number)
-#			page = PdfDocument.pages [page_number]
-#			page.merge_page(text_pdf.pages [page_number])
-#			output_pdf_writer.add_page(page)
 
 		with open(outputPdfPath, 'wb') as output_pdf:
 			output_pdf_writer.write(output_pdf)
