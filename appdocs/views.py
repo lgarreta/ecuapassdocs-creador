@@ -95,7 +95,7 @@ class VehiculoDetailView(generic.DetailView):
 class ManifiestoListView(generic.ListView):
 	model = Manifiesto
 
-class ManifiestoDetailView(generic.DetailView):
+class ManifiestoDetailView (generic.DetailView):
 	model = Manifiesto
 
 #--------------------------------------------------------------------

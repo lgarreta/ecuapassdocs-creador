@@ -29,7 +29,8 @@ urlpatterns = [
 
     path('cartaporte/<pk>/', CartaporteDocView.as_view(), name='cartaporte-documento'),
 
-    path('cartaportes/', views.CartaporteListView.as_view(), name='cartaportes'),
+    #path('cartaportes/', views.CartaporteListView.as_view(), name='cartaportes'),
+    path('cartaportes/', views_Filters.cartaportesFilterView, name='cartaportes'),
     path('cartaportes_filter/', views_Filters.cartaportesFilterView, name='cartaportes_filter'),
     path('cartaportes/<pk>', views.CartaporteDetailView.as_view(), name='cartaporte-detail'),
     path('cartaporte/create/', views.CartaporteCreate.as_view(), name='cartaporte-create'),
@@ -52,7 +53,8 @@ urlpatterns = [
     path('manifiesto/<pk>/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
     path('manifiesto/<pk>/', ManifiestoDocView.as_view(), name='manifiesto-documento'),
 
-    path('manifiestos/', views.ManifiestoListView.as_view(), name='manifiestos'),
+    #path('manifiestos/', views.ManifiestoListView.as_view(), name='manifiestos'),
+    path('manifiestos/', views_Filters.manifiestosFilterView, name='manifiestos'),
     path('manifiestos_filter/', views_Filters.manifiestosFilterView, name='manifiestos_filter'),
     path('manifiestos/<pk>', views.ManifiestoDetailView.as_view(), name='manifiesto-detail'),
     path('manifiesto/create/', views.ManifiestoCreate.as_view(), name='manifiesto-create'),

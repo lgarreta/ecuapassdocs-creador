@@ -64,6 +64,13 @@
 		  text-align: center;
 		}
 
+		.submit:disabled {
+			background-color: #ccc; /* Set the background color to gray when disabled */
+			color: #666; /* Set the text color to a darker shade when disabled */
+			cursor: not-allowed; /* Change cursor to indicate the button is disabled */
+		}
+
+
 		form {
 		  display: flex;
 		  flex-direction: column; /* Align items in a column */
@@ -71,22 +78,27 @@
 		  padding: 10px;
 		}		
 
-		#pdf_autosave_btn {
+		#pdf_autosave_btn:enabled {
 		  background-color: #FFFF00;
 		  color: black;
 		}
-		#pdf_original_btn {
+		#pdf_original_btn:enabled {
 		  background-color: #FAAAA0;
 		  color: black;
 		}
 
-		#pdf_copia_btn {
+		#pdf_copia_btn:enabled {
 		  background-color: #F0FFFF;
 		  color: black;
 		}
 
-		#pdf_clonar_btn {
+		#pdf_clonar_btn:enabled {
 		  background-color: #ADD8E6;
+		  color: black;
+		}		
+
+		#pdf_paquete_btn:enabled {
+		  background-color: #9BFF9b;
 		  color: black;
 		}		
 
@@ -127,10 +139,11 @@
 				{% csrf_token %}
 				<!-- Panel superior que muestra cuatro opciones para realizar con el documento -->
 				<div class="top-panel">
-					<button type="submit" id="pdf_autosave_btn" name="action" value="autosave">Guardar</button>
-					<button type="submit" id="pdf_original_btn" name="action" value="original" disabled >PDF original</button>
-					<button type="submit" id="pdf_copia_btn" name="action" value="copia" disabled>PDF copia</button>
-					<button type="submit" id="pdf_clonar_btn" name="action" value="clonar" disabled>Clonar</button>
+					<button class="submit" type="submit" id="pdf_autosave_btn" name="action" value="autosave">Guardar</button>
+					<button class="submit" type="submit" id="pdf_original_btn" name="action" value="original" disabled >PDF original</button>
+					<button class="submit" type="submit" id="pdf_copia_btn" name="action" value="copia" disabled>PDF copia</button>
+					<button class="submit" type="submit" id="pdf_paquete_btn" name="action" value="paquete" disabled>PDF Paquete</button>
+					<button class="submit" type="submit" id="pdf_clonar_btn" name="action" value="clonar" disabled>Clonar</button>
 				</div>
 				<!--------------------------------------------------------------->
 				<!------------- Input fields added dynamically ------------------>
@@ -155,8 +168,9 @@
 		setParametersToInputs (textAreas, inputsParameters, document_type);
 
 		// Enable / Disable document buttons
-		let docNumberInput = document.getElementById("txt00")
-		if (docNumberInput.value != "" && docNumberInput.value != "CLON")
+		let docNumber = document.getElementById ("numero")
+		let docNumberInput = document.getElementById ("txt00")
+		if (docNumber.value != "" && docNumber.value != "CLON")
 			enableDisableDocButtons ("ENABLE")
 
 		//-------------------------------------------------------------
@@ -167,8 +181,8 @@
 			$('#forma_pdf').submit(function (e) {
 			 	let formaPdf = this;
 				let submitterButton = e["originalEvent"]["submitter"]["id"];
-				document.getElementById('boton_pdf').value = submitterButton; 
 
+				document.getElementById('boton_pdf').value = submitterButton; 
 				e.preventDefault();  // Prevent the default form submission
 				var formData = $(this).serialize();
 
@@ -184,14 +198,17 @@
 
 					success: function (data) { // Handle the response from the server
 						let docId = document.getElementById("id")
-						let docNumberInput = document.getElementById("txt00")
+						let docNumber = document.getElementById ("numero")
 						if (submitterButton.includes ("autosave")){
-							if (docNumberInput.value == "" || docNumberInput.value == "CLON") {
+							if (docNumber.value == "" || docNumber.value == "CLON") {
 								docId.value          = data ["id"]
+								docNumber.value      = data ["numero"]
 								docNumberInput.value = data ["numero"]
 								enableDisableDocButtons ("ENABLE")
 							}
 						}if (submitterButton.includes ("original")){
+							formaPdf.submit ();
+						}else if (submitterButton.includes ("paquete")){
 							formaPdf.submit ();
 						}else if (submitterButton.includes ("copia")){
 							if (typeof data == "string")  // PDF content
@@ -201,6 +218,7 @@
 							}
 						}else if (submitterButton.includes ("clonar")){
 							enableDisableDocButtons ("DISABLE")
+							docNumber.value      = data ["numero"]
 							docNumberInput.value = data ["numero"]
 						}
 					},

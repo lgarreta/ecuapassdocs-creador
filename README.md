@@ -4,6 +4,7 @@
 - Custom user management
 
 ## LOG
+24/03: r0.750. Added PDF Paquete. Added numero to params. Bot for ECUAPASSDOCS.
 24/03: r0.741. Modified parameters files: added id.
 24/03: r0.740. Modified DB save: No GET-ID. Changed html form and views. Added 'id' to forms.
 22/03: r0.730. Removed autosave. Fixed max chars for obs.

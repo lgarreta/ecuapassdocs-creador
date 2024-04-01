@@ -4,10 +4,10 @@
 {% block content %}
 <div class="container"> 
     <h2>Ingreso</h2>
-    <form method="POST">
+    <form id="login" method="POST">
         {% csrf_token %}
         {{ form|crispy }}
-        <button class="btn btn-primary" type="submit">Ingreso</button>
+        <button id="submit" class="btn btn-primary" type="submit">Ingreso</button>
     </form>
 </div>
 {% endblock content %}

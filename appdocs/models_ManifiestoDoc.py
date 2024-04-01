@@ -106,8 +106,7 @@ class Manifiesto (EcuapassDoc):
 			record = Cartaporte.objects.get (numero=numeroCartaporte)
 			return record
 		except: 
-			print (f"ALERTA: Cartaporte número '{numeroCartaporte}' no encontrado.")
-			#Utils.printException (f"Exepcion: Cartaporte número '{numeroCartaporte}' no encontrado.")
+			Utils.printx (f"ALERTA: Cartaporte número '{numeroCartaporte}' no encontrado.")
 		return None
 
 	def getVehiculo (self, manifiestoInfo, vehicleType):
