@@ -6,7 +6,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
+
+from django.contrib import messages
 from django.contrib.messages import add_message
+
 from django.forms.models import model_to_dict
 
 # For CSRF protection
@@ -48,8 +51,13 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	# Envía los parámetros o restricciones para cada campo en la forma de HTML
 	#-------------------------------------------------------------------
 	def get (self, request, *args, **kwargs):
+		print ("-- GET --")
+		print ("kwargs:", kwargs)
+
 		global LAST_INPUTVALUES
 		self.setInitialValuesToInputs (request)
+
+		self.getRequestInfo (request, *args, **kwargs)
 
 		# Check if user has reached his total number of documents
 		if self.limiteDocumentosAsignados (request.user, self.document_type):
@@ -58,9 +66,12 @@ class EcuapassDocView (LoginRequiredMixin, View):
 			
 		# If edit, retrieve the PK from kwargs and load input parameters from package
 		pk = kwargs.get ('pk')
+		print ("--pk:edit: ", pk)
 		if pk:
+			print ("-- Retrieving values for edit")
 			result = self.setSavedValuesToInputs (pk)
 			if result == None:
+				print ("Tipo de documento desconocido")
 				add_message (request, messages.ERROR, "Tipo de documento desconocido")
 				return render (request, 'messages.html')
 			
@@ -70,6 +81,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 					  "background_image" : self.background_image,
 					  "document_url"    : self.document_type
 					 }
+
 		return render (request, self.template_name, contextDic)
 
 	#-------------------------------------------------------------------
@@ -77,8 +89,11 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	# Get doc number and create a PDF from document values.
 	#-------------------------------------------------------------------
 	@method_decorator(csrf_protect)
-	def post (self, request, *args, **kargs):
+	def post (self, request, *args, **kwargs):
+		print ("-- POST --")
 		global LAST_INPUTVALUES
+
+		self.getRequestInfo (request, *args, **kwargs)
 
 		# Get values from html form
 		inputValues = self.getInputValuesFromForm (request)		  # Values without CPI number
@@ -96,7 +111,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 				self.saveDocumentToDB (inputValues, fieldValues, request.user)
 				LAST_INPUTVALUES = inputValues
 
-			pdf_response = self.createResponseForOneDocument (inputValues, button_type)
+			pdf_response = self.createPdfResponseOneDocument (inputValues, button_type)
 			return pdf_response
 
 		# Create single PDF for main and child documents (Cartaporte + Manifiestos)
@@ -112,10 +127,25 @@ class EcuapassDocView (LoginRequiredMixin, View):
 			print (">>> Error: No se conoce opción del botón presionado:", button_type)
 
 	#-------------------------------------------------------------------
+	#-------------------------------------------------------------------
+	def getRequestInfo (self, request, *args, **kwargs):
+		print ("--request:", request)
+
+		trigger_url = request.POST.get('trigger_url')
+		print ("--- trigger_url:", trigger_url)
+
+		print ("--args:", args)
+
+		print ("--kwargs:", kwargs)
+
+		pk = kwargs.get ('pk')
+		print ("--pk:", pk)
+
+	#-------------------------------------------------------------------
 	# Create PDF for 'Cartaporte' plus its 'Manifiestos'
 	#-------------------------------------------------------------------
 	def createResponseForMultiDocument (self, inputValues):
-		creadorPDF = CreadorPDF (self.document_type)
+		creadorPDF = CreadorPDF ("MULTI_PDF")
 
 		# Get inputValues for Cartaporte childs
 		id = inputValues ["id"]
@@ -161,13 +191,13 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	#-- Create a PDF from document
 	#-------------------------------------------------------------------
-	def createResponseForOneDocument (self, inputValues, button_type):
+	def createPdfResponseOneDocument (self, inputValues, button_type):
 		pdf_response = None
 
 		print (">>> Creando respuesta PDF...")
-		creadorPDF = CreadorPDF (self.document_type)
+		creadorPDF = CreadorPDF ("ONE_PDF")
 
-		outPdfPath, outJsonPath = creadorPDF.createPdfDocument (inputValues, self.document_type, button_type)
+		outPdfPath, outJsonPath = creadorPDF.createPdfDocument (self.document_type, inputValues, button_type)
 
 		# Respond with the output PDF
 		with open(outPdfPath, 'rb') as pdf_file:
@@ -255,11 +285,11 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	def setSavedValuesToInputs (self, recordId):
 		instanceDoc = None
-		if (self.document_type == "cartaporte"):
+		if (self.document_type.upper() == "CARTAPORTE"):
 			instanceDoc = CartaporteDoc.objects.get (id=recordId)
-		elif (self.document_type == "manifiesto"):
+		elif (self.document_type.upper() == "MANIFIESTO"):
 			instanceDoc = ManifiestoDoc.objects.get (id=recordId)
-		elif (self.document_type == "declaracion"):
+		elif (self.document_type.upper() == "DECLARACION"):
 			instanceDoc = DeclaracionDoc.objects.get (id=recordId)
 		else:
 			print (f"Error: Tipo de documento '{self.document_type}' no soportado")
@@ -326,11 +356,11 @@ class EcuapassDocView (LoginRequiredMixin, View):
 	#-------------------------------------------------------------------
 	def getDocumentAndRegisterClass (self, document_type):
 		DocModel, RegModel = None, None
-		if document_type == "cartaporte":
+		if document_type.upper() == "CARTAPORTE":
 			DocModel, RegModel = CartaporteDoc, Cartaporte
-		elif document_type == "manifiesto":
+		elif document_type.upper() == "MANIFIESTO":
 			DocModel, RegModel = ManifiestoDoc, Manifiesto
-		elif document_type == "declaracion":
+		elif document_type.upper() == "DECLARACION":
 			DocModel, RegModel = DeclaracionDoc, Declaracion 
 		else:
 			print (f"Error: Tipo de documento '{document_type}' no soportado")
@@ -353,7 +383,7 @@ class EcuapassDocView (LoginRequiredMixin, View):
 
 	#-- Only for "cartaportes". Retrieve the object from the DB, increment docs, and save
 	def actualizarNroDocumentosCreados (self, username, document_type):
-		if (document_type != "cartaporte"):
+		if (document_type.upper() != "CARTAPORTE"):
 			return
 
 		user = get_object_or_404 (UsuarioEcuapass, username=username)

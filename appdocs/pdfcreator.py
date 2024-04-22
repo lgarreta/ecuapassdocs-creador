@@ -18,29 +18,29 @@ from ecuapassdocs.info.resourceloader import ResourceLoader
 # Crea un documento PDF con background y textos
 #----------------------------------------------------------------
 class CreadorPDF:
-	def __init__ (self, docType):
-		self.docType = docType
+	def __init__ (self, pdfType="ONE_PDF"):
+		self.pdfType = pdfType
 
 	#----------------------------------------------------------------
 	# Set filenmaes of resources files for creating PDFs
 	#----------------------------------------------------------------
 	def setFilenamesForResources (self, docType):
-		if docType.upper() == "MANIFIESTO":
-			self.PdfDocument     = ResourceLoader.loadPdf ("docs", 'manifiesto-vacio-NTA-BYZA.pdf')
-			self.ImgDocument     = ResourceLoader.loadImage ("docs", 'image-manifiesto-vacio-NTA-BYZA.png')
-			self.inputParameters = ResourceLoader.loadJson ("docs", 'manifiesto_input_parameters.json')
-			self.prefix = "MCI"
-		elif docType.upper() == "CARTAPORTE":
+		if docType.upper() == "CARTAPORTE":
 			self.PdfDocument     = ResourceLoader.loadPdf ("docs", 'cartaporte-vacia-SILOG-BYZA.pdf')
 			self.PdfDocument02   = ResourceLoader.loadPdf ("docs", 'cartaporte-contrato-BYZA.pdf')
 			self.ImgDocument     = ResourceLoader.loadImage ("docs", 'image-cartaporte-vacia-SILOG-BYZA.png')
 			self.inputParameters = ResourceLoader.loadJson ("docs", 'cartaporte_input_parameters.json')
 			self.prefix = "CPI"
+		elif docType.upper() == "MANIFIESTO":
+			self.PdfDocument     = ResourceLoader.loadPdf ("docs", 'manifiesto-vacio-NTA-BYZA.pdf')
+			self.ImgDocument     = ResourceLoader.loadImage ("docs", 'image-manifiesto-vacio-NTA-BYZA.png')
+			self.inputParameters = ResourceLoader.loadJson ("docs", 'manifiesto_input_parameters.json')
+			self.prefix = "MCI"
 		elif docType.upper() == "DECLARACION":
 			self.PdfDocument     = ResourceLoader.loadPdf ("docs", 'declaracion-vacia-NTA.pdf')
 			self.ImgDocument     = ResourceLoader.loadImage ("docs", 'image-declaracion-vacia-NTA.png')
 			self.inputParameters = ResourceLoader.loadJson ("docs", 'declaracion_input_parameters.json')
-			self.prefix          = "DTAI"
+			self.prefix          = "DCL"
 		else:
 			print (f"Error: Tipo de documento '{docType}' no soportado")
 			sys.exit (0)
@@ -51,12 +51,13 @@ class CreadorPDF:
 		#self.inputParameters.popitem ()      # OriginalCopia
 
 	#----------------------------------------------------------------
+	# Create multiPDF for values and docTypes
 	#----------------------------------------------------------------
 	def createMultiPdf (self, values, types):
 		pdf_list = []
 		docNumber = None
 		for i, (inputValues, docType) in enumerate (zip (values, types)):
-			outPdfPath, outJsonPath = self.createPdfDocument (inputValues, docType, "COPIA")
+			outPdfPath, outJsonPath = self.createPdfDocument (docType, inputValues, "COPIA")
 			pdf_list.append (outPdfPath)
 
 			if i == 0:
@@ -85,7 +86,7 @@ class CreadorPDF:
 	#-- Crea PDF con otro PDF como background y añade texto sobre este
 	#-- pdfType: "original", "copia", "clon"
 	#----------------------------------------------------------------
-	def createPdfDocument (self, inputValues, docType, pdfType):
+	def createPdfDocument (self, docType, inputValues, pdfType):
 		self.setFilenamesForResources (docType)
 
 		pdfType     = pdfType.lower()
@@ -96,24 +97,26 @@ class CreadorPDF:
 		#copyKey     = max (inputValues.keys ())
 		#inputValues [copyKey] = copyString;
 
-		if self.docType.upper () == "CARTAPORTE":
+		if docType.upper () == "CARTAPORTE":
 			inputValues ["txt24"] = copyString
-		elif self.docType.upper () == "MANIFIESTO":
+		elif docType.upper () == "MANIFIESTO":
 			inputValues ["txt41"] = copyString
+		else:
+			print (f"ERROR. Tipo de documento desconocido: '{self.docType}'")
 			
 		outPdfPath  = join (tmpPath, f"{self.prefix}-{docNumber}.pdf") 
 		outJsonPath = join (tmpPath, f"{self.prefix}-{docNumber}.json") 
 
-		text_pdf, jsonFieldsDic = self.writeInputsToPdf (self.inputParameters, inputValues)
+		text_pdf, jsonFieldsDic = self.writeInputsToPdf (docType, self.inputParameters, inputValues)
 		json.dump (jsonFieldsDic, open (outJsonPath, "w"), indent=4)
-		self.merge_pdfs (self.PdfDocument, text_pdf, outPdfPath)
+		self.merge_pdfs (docType, self.PdfDocument, text_pdf, outPdfPath)
 
 		return outPdfPath, outJsonPath
 
 	#----------------------------------------------------------------
 	# Write text values to output PDF
 	#----------------------------------------------------------------
-	def writeInputsToPdf (self, inputParameters, inputValues):
+	def writeInputsToPdf (self, docType, inputParameters, inputValues):
 		FONTSIZE = 9                  # Font "normal"
 		packet = io.BytesIO()
 		can = canvas.Canvas(packet)
@@ -151,8 +154,7 @@ class CreadorPDF:
 				else:    # "left" align
 					can.drawString (pdfBounds[0], top, line.strip())
 
-		#jsonFieldsDic = self.embedFieldsIntoPDF (can, inputParameters, inputValues)
-		jsonFieldsDic = {}
+		jsonFieldsDic = self.embedFieldsIntoPDF (docType, can, inputParameters, inputValues)
 		can.save()
 
 		packet.seek(0)
@@ -162,30 +164,18 @@ class CreadorPDF:
 	#-- Embed fields info (key:value) into PDF doc
 	#-- Info is embedded according to Azure format
 	#----------------------------------------------------------------
-	def embedFieldsIntoPDF (self, pdfCanvas, inputParameters, inputValues):
-		if self.docType == "manifiesto":
-			return self.embedFieldsIntoPDFManifiesto (pdfCanvas, inputParameters, inputValues)
-		elif self.docType == "cartaporte":
+	def embedFieldsIntoPDF (self, docType, pdfCanvas, inputParameters, inputValues):
+		print (">>> Embebiendo información del documento dentro del PDF...")
+		if docType.upper() == "CARTAPORTE":
 			return self.embedFieldsIntoPDFCartaporte (pdfCanvas, inputParameters, inputValues)
-		elif self.docType == "declaracion":
-			print ("ALERTA: Aún no implementado la insersión de campos en declaraciones")
+		elif docType.upper() == "MANIFIESTO":
 			return self.embedFieldsIntoPDFManifiesto (pdfCanvas, inputParameters, inputValues)
+		elif docType.upper() == "DECLARACION":
+			print ("ALERTA: Aún no implementado la insersión de campos en declaraciones")
+		else:
+			print (f"ERROR. Tipo de documento desconocido: '{self.docType}´") 
 
 		return None
-
-	def embedFieldsIntoPDFManifiesto (self, pdfCanvas, inputParameters, inputValues):
-		jsonFieldsDic = {}
-		for key, params in inputParameters.items():
-			fieldName    = params ["field"]
-			#value        = inputValues [key].replace ("\r\n", "\n")
-			value        = inputValues [key]
-			jsonFieldsDic [fieldName] = {"value": value, "content": value}
-
-		embedded_jsonData = json.dumps (jsonFieldsDic, ensure_ascii=False)
-		pdfCanvas.setFont("Helvetica", 0)  # Set font size to 0 for hidden text
-		pdfCanvas.drawString(100, 150, f"Embedded_jsonData: {embedded_jsonData}")
-
-		return jsonFieldsDic
 
 	def embedFieldsIntoPDFCartaporte (self, pdfCanvas, inputParameters, inputValues):
 		jsonFieldsDic = {}
@@ -202,10 +192,23 @@ class CreadorPDF:
 				tableName, rowName, colName = res [0], res [1], res[2]
 				if value != "":
 					gastosDic ["value"][rowName]["value"][colName] = {"value": value, "content": value}
+					jsonFieldsDic [tableName] = gastosDic
 			else:
 				jsonFieldsDic [fieldName] = {"value": value, "content": value}
 
-		jsonFieldsDic [tableName] = gastosDic
+		embedded_jsonData = json.dumps (jsonFieldsDic, ensure_ascii=False)
+		pdfCanvas.setFont("Helvetica", 0)  # Set font size to 0 for hidden text
+		pdfCanvas.drawString(100, 150, f"Embedded_jsonData: {embedded_jsonData}")
+
+		return jsonFieldsDic
+
+	def embedFieldsIntoPDFManifiesto (self, pdfCanvas, inputParameters, inputValues):
+		jsonFieldsDic = {}
+		for key, params in inputParameters.items():
+			fieldName    = params ["field"]
+			#value        = inputValues [key].replace ("\r\n", "\n")
+			value        = inputValues [key]
+			jsonFieldsDic [fieldName] = {"value": value, "content": value}
 
 		embedded_jsonData = json.dumps (jsonFieldsDic, ensure_ascii=False)
 		pdfCanvas.setFont("Helvetica", 0)  # Set font size to 0 for hidden text
@@ -248,7 +251,7 @@ class CreadorPDF:
 	#----------------------------------------------------------------
 	#-- Merge pdf background image with text and add a second page
 	#----------------------------------------------------------------
-	def merge_pdfs(self, PdfDocument, text_pdf, outputPdfPath):
+	def merge_pdfs (self, docType, PdfDocument, text_pdf, outputPdfPath):
 		output_pdf_writer = PdfWriter()
 
 		page0 = PdfDocument.pages [0]
@@ -256,7 +259,7 @@ class CreadorPDF:
 		output_pdf_writer.add_page (page0)
 
 		# Add the contract page
-		if (self.docType == "CARTAPORTE"):
+		if (docType.upper() == "CARTAPORTE" and self.pdfType == "ONE_PDF"):
 			page1 = PdfDocument.pages [1]
 			output_pdf_writer.add_page (page1)
 
@@ -320,6 +323,6 @@ if __name__ == "__main__":
         # Add more text bounds as needed
     }
 
-    creadorPDF = CreadorPDF ("cartaporte")
+    creadorPDF = CreadorPDF ("CARTAPORTE")
     creadorPDF.crearPDF (backgroundPdfPath, inputParameters, outputPdfPath)
 

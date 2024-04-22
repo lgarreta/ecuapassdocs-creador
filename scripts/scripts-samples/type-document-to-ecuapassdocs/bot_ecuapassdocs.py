@@ -36,6 +36,8 @@ def mainDocBot (docFieldsFile):
 #----------------------------------------------------------------
 class DocBot:
 	def __init__ (self, docFieldsFile):
+		#self.url           = "https://ecuapassdocs-test.up.railway.app/"
+		self.url           = "http://127.0.0.1:8000/"
 		self.docFieldsFile = docFieldsFile
 		self.driver        = None
 		self.docType       = self.getDocumentTypeFromFilename (docFieldsFile)
@@ -68,7 +70,8 @@ class DocBot:
 	def login (self, pais):
 		# Open and click on "Continuar" button
 		driver = webdriver.Chrome ()
-		driver.get ("http://127.0.0.1:8000/")
+		#driver.get ("http://127.0.0.1:8000/")
+		driver.get (self.url)
 		iniciarSesionLink = driver.find_element (By.LINK_TEXT, "Iniciar sesión")
 		iniciarSesionLink.click ()
 
@@ -172,6 +175,8 @@ class DocBot:
 				elem = docForm.find_element (By.NAME, field)
 				#elem.click ()
 				elem.send_keys (value.replace ("\r\n", "\n"))
+
+			time.sleep (0.4)
 
 	#-----------------------------------------------------------
 	#-- Get type of document from filename (e.g CPI-XXX.pdf or CARTAPORTE-XXX.pdf 

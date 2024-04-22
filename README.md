@@ -4,6 +4,10 @@
 - Custom user management
 
 ## LOG
+22/Abril: r0.770. Added commands block and code for all details.
+15/04: r0.762. Fixed errors in commands buttons view. Added a CSS for buttons"
+15/04: r0.760. Working commands buttons block in CPI and MCI. 
+09/04: r0.752. Working pdf-original in new ServicesDoc view
 24/03: r0.751. Added validations for manual assignment of numero. Fixed MultiPDF.
 24/03: r0.750. Added PDF Paquete. Added numero to params. Bot for ECUAPASSDOCS.
 24/03: r0.741. Modified parameters files: added id.

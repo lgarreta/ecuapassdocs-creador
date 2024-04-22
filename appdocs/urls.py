@@ -10,6 +10,8 @@ from .views_ManifiestoDocView import *
 from .views_DeclaracionDocView import *
 from .views_Entidades import *
 
+from .views_ComandosView import *
+
 #app_name = "appdocs"
 
 urlpatterns = [
@@ -51,6 +53,7 @@ urlpatterns = [
     path('manifiesto/<pk>/opciones-cartaporte/', CartaporteOptionsView.as_view(), name='opciones-cartaporte'),
     path('manifiesto/<pk>/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
     path('manifiesto/<pk>/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
+
     path('manifiesto/<pk>/', ManifiestoDocView.as_view(), name='manifiesto-documento'),
 
     #path('manifiestos/', views.ManifiestoListView.as_view(), name='manifiestos'),
@@ -60,6 +63,10 @@ urlpatterns = [
     path('manifiesto/create/', views.ManifiestoCreate.as_view(), name='manifiesto-create'),
     path('manifiesto/<pk>/update/', views.ManifiestoUpdate.as_view(), name='manifiesto-update'),
     path('manifiesto/<pk>/delete/', views.ManifiestoDelete.as_view(), name='manifiesto-delete'),
+
+	#-- URLs for comandos --------------------------------------------
+    path('cartaporte/<pk>/<comando>/', ComandosCartaporteView.as_view(), name='cartaporte-comandos'),
+    path('manifiesto/<pk>/<comando>/', ComandosManifiestoView.as_view(), name='manifiesto-comandos'),
 
 	#-- URLs declaracion -----------------------------------------------
     path("declaracion/", DeclaracionDocView.as_view(), name="declaracion"),
